@@ -1,20 +1,23 @@
 const root = document.getElementById("root");
 
-import("react")
-  .then((React) => {
+Promise.all([
+  import("react"),
+  import("react-dom/client")
+])
+  .then(([React, ReactDOM]) => {
     root.innerHTML = `
       <div style="padding:40px;font-family:Arial">
-        <h1>🧯 React se načetl</h1>
-        <p>React modul funguje.</p>
-        <p>Verze: ${React.version}</p>
+        <h1>🧯 ReactDOM se načetl</h1>
+        <p>React: ${React.version}</p>
+        <p>ReactDOM funguje.</p>
       </div>
     `;
   })
   .catch((error) => {
     root.innerHTML = `
       <div style="padding:40px;font-family:Arial;color:red">
-        <h1>❌ React se nenačetl</h1>
-        <pre>${error.stack || error}</pre>
+        <h1>❌ ReactDOM chyba</h1>
+        <pre style="white-space:pre-wrap">${error.stack || error}</pre>
       </div>
     `;
   });
