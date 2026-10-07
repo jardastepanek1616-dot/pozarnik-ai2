@@ -1,8 +1,7 @@
-const root = document.getElementById("root");
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 
-root.innerHTML = `
-  <div style="padding:40px;font-family:Arial">
-    <h1>🧯 Požárník AI</h1>
-    <p>Test main.jsx funguje!</p>
-  </div>
-`;
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <App />
+);
