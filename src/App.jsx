@@ -37,34 +37,46 @@ const LEGAL_RULES = {
 };
 
 /* =========================
-   AUTOMATICKÉ VÝPOČTY
+   VÝPOČTY
 ========================= */
 
-function calculatePeriodicYear(type, lastPeriodicYear) {
+function calculatePeriodicYear(
+  type,
+  lastPeriodicYear
+) {
   const rule = LEGAL_RULES[type];
 
   if (!rule || !lastPeriodicYear) {
     return null;
   }
 
-  return Number(lastPeriodicYear) + rule.periodicYears;
+  return (
+    Number(lastPeriodicYear) +
+    rule.periodicYears
+  );
 }
 
-function calculateLifeEnd(type, manufactureYear) {
+function calculateLifeEnd(
+  type,
+  manufactureYear
+) {
   const rule = LEGAL_RULES[type];
 
   if (!rule || !manufactureYear) {
     return null;
   }
 
-  return Number(manufactureYear) + rule.lifeYears;
+  return (
+    Number(manufactureYear) +
+    rule.lifeYears
+  );
 }
 
 /* =========================
-   DATA
+   POČÁTEČNÍ DATA
 ========================= */
 
-const objectsData = [
+const initialObjects = [
   {
     id: 1,
     name: "Panelový dům 125",
@@ -400,26 +412,77 @@ const objectsData = [
 ========================= */
 
 function App() {
-  const [screen, setScreen] = useState("dashboard");
-  const [selectedObject, setSelectedObject] = useState(null);
-  const [selectedDevice, setSelectedDevice] = useState(null);
+  const [screen, setScreen] =
+    useState("dashboard");
+
+  const [objects, setObjects] =
+    useState(initialObjects);
+
+  const [selectedObjectId, setSelectedObjectId] =
+    useState(null);
+
+  const [selectedDeviceId, setSelectedDeviceId] =
+    useState(null);
+
+  const [showAddDevice, setShowAddDevice] =
+    useState(false);
+
+  const selectedObject =
+    objects.find(
+      (object) =>
+        object.id ===
+        selectedObjectId
+    );
+
+  const selectedDevice =
+    selectedObject?.devices.find(
+      (device) =>
+        device.id ===
+        selectedDeviceId
+    );
 
   function openObject(object) {
-    setSelectedObject(object);
-    setSelectedDevice(null);
+    setSelectedObjectId(object.id);
+    setSelectedDeviceId(null);
   }
 
   function openDevice(device) {
-    setSelectedDevice(device);
+    setSelectedDeviceId(device.id);
   }
 
   function backToObjects() {
-    setSelectedObject(null);
-    setSelectedDevice(null);
+    setSelectedObjectId(null);
+    setSelectedDeviceId(null);
   }
 
   function backToObject() {
-    setSelectedDevice(null);
+    setSelectedDeviceId(null);
+  }
+
+  function addDevice(device) {
+    setObjects((currentObjects) =>
+      currentObjects.map(
+        (object) => {
+          if (
+            object.id !==
+            selectedObjectId
+          ) {
+            return object;
+          }
+
+          return {
+            ...object,
+
+            devices: [
+              ...object.devices,
+              device,
+            ],
+          };
+        }
+      )
+    );
+
+    setShowAddDevice(false);
   }
 
   return (
@@ -428,7 +491,8 @@ function App() {
         minHeight: "100vh",
         background: "#f4f6f8",
         color: "#111827",
-        fontFamily: "Arial, Helvetica, sans-serif",
+        fontFamily:
+          "Arial, Helvetica, sans-serif",
         paddingBottom: 90,
       }}
     >
@@ -438,14 +502,21 @@ function App() {
           top: 0,
           zIndex: 10,
           background: "white",
-          borderBottom: "1px solid #e5e7eb",
-          padding: "16px 18px",
+          borderBottom:
+            "1px solid #e5e7eb",
+          padding:
+            "16px 18px",
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent:
+            "space-between",
           alignItems: "center",
         }}
       >
-        <b style={{ fontSize: 21 }}>
+        <b
+          style={{
+            fontSize: 21,
+          }}
+        >
           🧯 Požárník AI
         </b>
 
@@ -463,56 +534,91 @@ function App() {
         style={{
           maxWidth: 850,
           margin: "auto",
-          padding: "22px 16px",
+          padding:
+            "22px 16px",
         }}
       >
-        {screen === "dashboard" && <Dashboard />}
+        {screen ===
+          "dashboard" && (
+          <Dashboard
+            objects={objects}
+          />
+        )}
 
-        {screen === "objects" &&
+        {screen ===
+          "objects" &&
           !selectedObject && (
             <Objects
-              onOpenObject={openObject}
+              objects={objects}
+              onOpenObject={
+                openObject
+              }
             />
           )}
 
-        {screen === "objects" &&
+        {screen ===
+          "objects" &&
           selectedObject &&
           !selectedDevice && (
             <ObjectDetail
-              object={selectedObject}
-              onBack={backToObjects}
-              onOpenDevice={openDevice}
+              object={
+                selectedObject
+              }
+              onBack={
+                backToObjects
+              }
+              onOpenDevice={
+                openDevice
+              }
+              onAddDevice={() =>
+                setShowAddDevice(
+                  true
+                )
+              }
             />
           )}
 
-        {screen === "objects" &&
+        {screen ===
+          "objects" &&
           selectedObject &&
           selectedDevice && (
             <DeviceDetail
-              device={selectedDevice}
-              object={selectedObject}
-              onBack={backToObject}
+              device={
+                selectedDevice
+              }
+              object={
+                selectedObject
+              }
+              onBack={
+                backToObject
+              }
             />
           )}
 
-        {screen !== "dashboard" &&
-          screen !== "objects" && (
-            <>
-              <h1>
-                {
-                  menu.find(
-                    (item) =>
-                      item[0] === screen
-                  )?.[2]
-                }
-              </h1>
+        {screen !==
+          "dashboard" &&
+          screen !==
+            "objects" && (
+          <>
+            <h1>
+              {
+                menu.find(
+                  (item) =>
+                    item[0] ===
+                    screen
+                )?.[2]
+              }
+            </h1>
 
-              <div style={cardStyle}>
-                Tato část aplikace přijde na řadu
-                za chvíli. 😎
-              </div>
-            </>
-          )}
+            <div
+              style={cardStyle}
+            >
+              Tato část aplikace
+              přijde na řadu za
+              chvíli. 😎
+            </div>
+          </>
+        )}
       </main>
 
       <nav
@@ -525,7 +631,8 @@ function App() {
           height: 75,
           background:
             "rgba(255,255,255,.97)",
-          borderTop: "1px solid #ddd",
+          borderTop:
+            "1px solid #ddd",
           display: "flex",
           justifyContent:
             "space-around",
@@ -538,8 +645,12 @@ function App() {
               key={id}
               onPointerDown={() => {
                 setScreen(id);
-                setSelectedObject(null);
-                setSelectedDevice(null);
+                setSelectedObjectId(
+                  null
+                );
+                setSelectedDeviceId(
+                  null
+                );
               }}
               style={{
                 border: 0,
@@ -583,6 +694,21 @@ function App() {
           )
         )}
       </nav>
+
+      {showAddDevice &&
+        selectedObject && (
+          <AddDeviceModal
+            object={
+              selectedObject
+            }
+            onClose={() =>
+              setShowAddDevice(
+                false
+              )
+            }
+            onSave={addDevice}
+          />
+        )}
     </div>
   );
 }
@@ -591,12 +717,21 @@ function App() {
    PŘEHLED
 ========================= */
 
-function Dashboard() {
+function Dashboard({
+  objects,
+}) {
+  const allDevices =
+    objects.flatMap(
+      (object) =>
+        object.devices
+    );
+
   return (
     <>
       <h1
         style={{
-          margin: "0 0 18px",
+          margin:
+            "0 0 18px",
         }}
       >
         Přehled
@@ -608,7 +743,8 @@ function Dashboard() {
             display: "flex",
             justifyContent:
               "space-between",
-            alignItems: "center",
+            alignItems:
+              "center",
             gap: 12,
           }}
         >
@@ -621,8 +757,13 @@ function Dashboard() {
               Požární evidence
             </b>
 
-            <div style={mutedStyle}>
-              SBD Bílina • SVJ Bílina
+            <div
+              style={
+                mutedStyle
+              }
+            >
+              SBD Bílina • SVJ
+              Bílina
             </div>
           </div>
 
@@ -643,12 +784,16 @@ function Dashboard() {
         }}
       >
         <DashboardStat
-          number="50"
+          number={
+            objects.length
+          }
           text="objektů"
         />
 
         <DashboardStat
-          number="247"
+          number={
+            allDevices.length
+          }
           text="zařízení"
         />
 
@@ -682,7 +827,8 @@ function Dashboard() {
         <button
           style={{
             width: "100%",
-            background: "#111827",
+            background:
+              "#111827",
             color: "white",
             border: 0,
             borderRadius: 12,
@@ -691,19 +837,23 @@ function Dashboard() {
             fontWeight: 700,
           }}
         >
-          📷 Skenovat QR hasičáku
+          📷 Skenovat QR
+          hasičáku
         </button>
 
         <div
           style={{
-            textAlign: "center",
-            color: "#6b7280",
+            textAlign:
+              "center",
+            color:
+              "#6b7280",
             fontSize: 13,
             marginTop: 9,
           }}
         >
-          QR kód vede vždy na
-          konkrétní zařízení.
+          QR kód vede vždy
+          na konkrétní
+          zařízení.
         </div>
       </div>
 
@@ -712,12 +862,14 @@ function Dashboard() {
           marginTop: 28,
         }}
       >
-        ⚠️ Co potřebuje pozornost
+        ⚠️ Co potřebuje
+        pozornost
       </h2>
 
       <div
         style={{
-          background: "#fffbeb",
+          background:
+            "#fffbeb",
           border:
             "1px solid #fde68a",
           borderRadius: 14,
@@ -726,25 +878,31 @@ function Dashboard() {
         }}
       >
         <b>
-          🔧 Z-0002 — Práškový
+          🔧 Z-0002 —
+          Práškový
         </b>
 
         <br />
 
-        Bude muset na periodickou
-        zkoušku
+        Bude muset na
+        periodickou zkoušku
 
         <br />
 
-        <span style={smallStyle}>
-          15. 3. 2027 • Panelový dům
-          127
+        <span
+          style={
+            smallStyle
+          }
+        >
+          15. 3. 2027 •
+          Panelový dům 127
         </span>
       </div>
 
       <div
         style={{
-          background: "#f5f3ff",
+          background:
+            "#f5f3ff",
           border:
             "1px solid #ddd6fe",
           borderRadius: 14,
@@ -753,7 +911,8 @@ function Dashboard() {
         }}
       >
         <b>
-          ⏳ Z-0003 — Vodní
+          ⏳ Z-0003 —
+          Vodní
         </b>
 
         <br />
@@ -762,9 +921,13 @@ function Dashboard() {
 
         <br />
 
-        <span style={smallStyle}>
-          2. 4. 2027 • Panelový dům
-          129
+        <span
+          style={
+            smallStyle
+          }
+        >
+          2. 4. 2027 •
+          Panelový dům 129
         </span>
       </div>
 
@@ -813,7 +976,8 @@ function DashboardStat({
 
       <span
         style={{
-          color: "#6b7280",
+          color:
+            "#6b7280",
           fontSize: 13,
         }}
       >
@@ -833,7 +997,8 @@ function FaultRow({
         display: "flex",
         justifyContent:
           "space-between",
-        padding: "11px 0",
+        padding:
+          "11px 0",
         borderBottom:
           "1px solid #eee",
       }}
@@ -849,6 +1014,7 @@ function FaultRow({
 ========================= */
 
 function Objects({
+  objects,
   onOpenObject,
 }) {
   const [customer, setCustomer] =
@@ -858,10 +1024,11 @@ function Objects({
     useState("");
 
   const filteredObjects =
-    objectsData.filter(
+    objects.filter(
       (object) => {
         const matchesCustomer =
-          customer === "Všichni" ||
+          customer ===
+            "Všichni" ||
           object.customer ===
             customer;
 
@@ -888,7 +1055,8 @@ function Objects({
           display: "flex",
           justifyContent:
             "space-between",
-          alignItems: "center",
+          alignItems:
+            "center",
           gap: 10,
           marginBottom: 18,
         }}
@@ -903,7 +1071,8 @@ function Objects({
 
         <button
           style={{
-            background: "#111827",
+            background:
+              "#111827",
             color: "white",
             border: 0,
             borderRadius: 10,
@@ -937,7 +1106,9 @@ function Objects({
               <button
                 key={name}
                 onPointerDown={() =>
-                  setCustomer(name)
+                  setCustomer(
+                    name
+                  )
                 }
                 style={{
                   background:
@@ -945,16 +1116,13 @@ function Objects({
                     name
                       ? "#111827"
                       : "#f3f4f6",
-
                   color:
                     customer ===
                     name
                       ? "white"
                       : "#111827",
-
                   border:
                     "1px solid #e5e7eb",
-
                   borderRadius: 10,
                   padding:
                     "10px 13px",
@@ -985,7 +1153,8 @@ function Objects({
           borderRadius: 12,
           marginBottom: 14,
           fontSize: 16,
-          background: "white",
+          background:
+            "white",
           boxSizing:
             "border-box",
         }}
@@ -1052,7 +1221,10 @@ function Objects({
               >
                 <div>
                   <b>
-                    🏢 {object.name}
+                    🏢{" "}
+                    {
+                      object.name
+                    }
                   </b>
 
                   <div
@@ -1060,7 +1232,9 @@ function Objects({
                       mutedStyle
                     }
                   >
-                    {object.customer}
+                    {
+                      object.customer
+                    }
                   </div>
 
                   <div
@@ -1068,12 +1242,16 @@ function Objects({
                       smallStyle
                     }
                   >
-                    {object.address}
+                    {
+                      object.address
+                    }
                   </div>
                 </div>
 
                 <ObjectStatus
-                  status={status}
+                  status={
+                    status
+                  }
                 />
               </div>
 
@@ -1094,7 +1272,9 @@ function Objects({
                 hasičáků
                 {" • "}
                 🚒{" "}
-                {hydrants.length}{" "}
+                {
+                  hydrants.length
+                }{" "}
                 hydrantů
               </div>
 
@@ -1105,7 +1285,8 @@ function Objects({
                   )
                 }
                 style={{
-                  width: "100%",
+                  width:
+                    "100%",
                   marginTop: 12,
                   background:
                     "#f3f4f6",
@@ -1122,23 +1303,6 @@ function Objects({
           );
         }
       )}
-
-      {filteredObjects.length ===
-        0 && (
-        <div
-          style={{
-            ...cardStyle,
-            textAlign:
-              "center",
-            color:
-              "#6b7280",
-            padding: 25,
-          }}
-        >
-          Žádný objekt nebyl
-          nalezen.
-        </div>
-      )}
     </>
   );
 }
@@ -1151,6 +1315,7 @@ function ObjectDetail({
   object,
   onBack,
   onOpenDevice,
+  onAddDevice,
 }) {
   const extinguishers =
     object.devices.filter(
@@ -1223,7 +1388,9 @@ function ObjectDetail({
         >
           <div>
             <b>
-              {object.customer}
+              {
+                object.customer
+              }
             </b>
 
             <div
@@ -1231,12 +1398,17 @@ function ObjectDetail({
                 mutedStyle
               }
             >
-              📍 {object.address}
+              📍{" "}
+              {
+                object.address
+              }
             </div>
           </div>
 
           <ObjectStatus
-            status={status}
+            status={
+              status
+            }
           />
         </div>
       </div>
@@ -1263,6 +1435,26 @@ function ObjectDetail({
           text="hydrantů"
         />
       </div>
+
+      <button
+        onPointerDown={
+          onAddDevice
+        }
+        style={{
+          width: "100%",
+          background:
+            "#111827",
+          color: "white",
+          border: 0,
+          borderRadius: 12,
+          padding: 15,
+          fontSize: 16,
+          fontWeight: 700,
+          marginTop: 18,
+        }}
+      >
+        + Přidat zařízení
+      </button>
 
       <h2
         style={{
@@ -1312,6 +1504,453 @@ function ObjectDetail({
 }
 
 /* =========================
+   PŘIDÁNÍ ZAŘÍZENÍ
+========================= */
+
+function AddDeviceModal({
+  object,
+  onClose,
+  onSave,
+}) {
+  const [type, setType] =
+    useState("PRASKOVY");
+
+  const [manufacturer, setManufacturer] =
+    useState("");
+
+  const [serial, setSerial] =
+    useState("");
+
+  const [manufactureYear, setManufactureYear] =
+    useState("");
+
+  const [lastPeriodicYear, setLastPeriodicYear] =
+    useState("");
+
+  const [location, setLocation] =
+    useState("");
+
+  const [position, setPosition] =
+    useState("");
+
+  const isHydrant =
+    type === "HYDRANT";
+
+  function save() {
+    if (!location.trim()) {
+      alert(
+        "Vyplň prosím umístění."
+      );
+      return;
+    }
+
+    if (!position.trim()) {
+      alert(
+        "Vyplň prosím pozici."
+      );
+      return;
+    }
+
+    if (
+      !isHydrant &&
+      !manufactureYear
+    ) {
+      alert(
+        "Vyplň rok výroby."
+      );
+      return;
+    }
+
+    if (
+      !isHydrant &&
+      !lastPeriodicYear
+    ) {
+      alert(
+        "Vyplň rok poslední periodické zkoušky."
+      );
+      return;
+    }
+
+    const prefix =
+      type === "HYDRANT"
+        ? "H"
+        : type === "CO2"
+        ? "C"
+        : type === "VODNI"
+        ? "V"
+        : "P";
+
+    const newId =
+      `${prefix}-${Date.now()
+        .toString()
+        .slice(-6)}`;
+
+    const newDevice = {
+      id: newId,
+      type,
+
+      lastCheck: "—",
+      nextCheck: "—",
+
+      location:
+        location.trim(),
+
+      position:
+        position.trim(),
+
+      status:
+        "V POŘÁDKU",
+    };
+
+    if (!isHydrant) {
+      newDevice.manufacturer =
+        manufacturer.trim();
+
+      newDevice.serial =
+        serial.trim();
+
+      newDevice.manufactureYear =
+        Number(
+          manufactureYear
+        );
+
+      newDevice.lastPeriodicYear =
+        Number(
+          lastPeriodicYear
+        );
+    }
+
+    onSave(newDevice);
+  }
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background:
+          "rgba(0,0,0,.45)",
+        zIndex: 100,
+        display: "flex",
+        alignItems:
+          "flex-end",
+        justifyContent:
+          "center",
+      }}
+    >
+      <div
+        style={{
+          background:
+            "white",
+          width: "100%",
+          maxWidth: 850,
+          maxHeight:
+            "90vh",
+          overflowY:
+            "auto",
+          borderRadius:
+            "20px 20px 0 0",
+          padding: 20,
+          boxSizing:
+            "border-box",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent:
+              "space-between",
+            alignItems:
+              "center",
+            marginBottom: 18,
+          }}
+        >
+          <div>
+            <h2
+              style={{
+                margin: 0,
+              }}
+            >
+              + Přidat zařízení
+            </h2>
+
+            <div
+              style={
+                mutedStyle
+              }
+            >
+              {object.name}
+            </div>
+          </div>
+
+          <button
+            onPointerDown={
+              onClose
+            }
+            style={{
+              border: 0,
+              background:
+                "#f3f4f6",
+              borderRadius: 10,
+              padding:
+                "9px 12px",
+              fontSize: 18,
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        <label
+          style={labelStyle}
+        >
+          Typ zařízení
+        </label>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(2, 1fr)",
+            gap: 8,
+            marginBottom: 16,
+          }}
+        >
+          {[
+            ["PRASKOVY", "🧯 Práškový"],
+            ["VODNI", "💧 Vodní"],
+            ["CO2", "❄️ CO₂"],
+            ["HYDRANT", "🚒 Hydrant"],
+          ].map(
+            ([value, label]) => (
+              <button
+                key={value}
+                onPointerDown={() =>
+                  setType(value)
+                }
+                style={{
+                  padding: 13,
+                  border:
+                    type === value
+                      ? "2px solid #111827"
+                      : "1px solid #e5e7eb",
+                  background:
+                    type === value
+                      ? "#f3f4f6"
+                      : "white",
+                  borderRadius: 11,
+                  fontWeight: 700,
+                }}
+              >
+                {label}
+              </button>
+            )
+          )}
+        </div>
+
+        {!isHydrant && (
+          <>
+            <label
+              style={labelStyle}
+            >
+              Výrobce
+            </label>
+
+            <input
+              value={
+                manufacturer
+              }
+              onChange={(e) =>
+                setManufacturer(
+                  e.target.value
+                )
+              }
+              placeholder="Např. Kovové výrobky"
+              style={
+                inputStyle
+              }
+            />
+
+            <label
+              style={labelStyle}
+            >
+              Výrobní číslo
+            </label>
+
+            <input
+              value={serial}
+              onChange={(e) =>
+                setSerial(
+                  e.target.value
+                )
+              }
+              placeholder="Např. ABC123456"
+              style={
+                inputStyle
+              }
+            />
+
+            <label
+              style={labelStyle}
+            >
+              Rok výroby
+            </label>
+
+            <input
+              type="number"
+              inputMode="numeric"
+              value={
+                manufactureYear
+              }
+              onChange={(e) =>
+                setManufactureYear(
+                  e.target.value
+                )
+              }
+              placeholder="Např. 2020"
+              style={
+                inputStyle
+              }
+            />
+
+            <label
+              style={labelStyle}
+            >
+              Poslední periodická zkouška
+            </label>
+
+            <input
+              type="number"
+              inputMode="numeric"
+              value={
+                lastPeriodicYear
+              }
+              onChange={(e) =>
+                setLastPeriodicYear(
+                  e.target.value
+                )
+              }
+              placeholder="Např. 2025"
+              style={
+                inputStyle
+              }
+            />
+
+            {manufactureYear &&
+              lastPeriodicYear && (
+                <div
+                  style={{
+                    background:
+                      "#f3f4f6",
+                    borderRadius: 12,
+                    padding: 13,
+                    marginBottom: 15,
+                    fontSize: 14,
+                  }}
+                >
+                  <b>
+                    Automaticky
+                    vypočítáno:
+                  </b>
+
+                  <div
+                    style={{
+                      marginTop: 7,
+                    }}
+                  >
+                    🔧 Další periodická
+                    zkouška:{" "}
+                    <b>
+                      {
+                        calculatePeriodicYear(
+                          type,
+                          lastPeriodicYear
+                        )
+                      }
+                    </b>
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: 5,
+                    }}
+                  >
+                    ⏳ Konec životnosti:{" "}
+                    <b>
+                      {
+                        calculateLifeEnd(
+                          type,
+                          manufactureYear
+                        )
+                      }
+                    </b>
+                  </div>
+                </div>
+              )}
+          </>
+        )}
+
+        <label
+          style={labelStyle}
+        >
+          Patro / umístění
+        </label>
+
+        <input
+          value={location}
+          onChange={(e) =>
+            setLocation(
+              e.target.value
+            )
+          }
+          placeholder="Např. 2. patro"
+          style={
+            inputStyle
+          }
+        />
+
+        <label
+          style={labelStyle}
+        >
+          Přesné místo
+        </label>
+
+        <input
+          value={position}
+          onChange={(e) =>
+            setPosition(
+              e.target.value
+            )
+          }
+          placeholder="Např. chodba"
+          style={
+            inputStyle
+          }
+        />
+
+        <button
+          onPointerDown={save}
+          style={{
+            width: "100%",
+            background:
+              "#111827",
+            color: "white",
+            border: 0,
+            borderRadius: 12,
+            padding: 16,
+            fontSize: 16,
+            fontWeight: 700,
+            marginTop: 8,
+          }}
+        >
+          ✅ Přidat zařízení
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* =========================
    KARTA ZAŘÍZENÍ
 ========================= */
 
@@ -1328,7 +1967,8 @@ function DeviceCard({
     device.type ===
     "HYDRANT"
       ? "🚒"
-      : rule?.icon || "🧯";
+      : rule?.icon ||
+        "🧯";
 
   const name =
     device.type ===
@@ -1354,7 +1994,8 @@ function DeviceCard({
       >
         <div>
           <b>
-            {icon} {device.id}
+            {icon}{" "}
+            {device.id}
           </b>
 
           <div
@@ -1370,18 +2011,27 @@ function DeviceCard({
               smallStyle
             }
           >
-            {device.location} •{" "}
-            {device.position}
+            {
+              device.location
+            }{" "}
+            •{" "}
+            {
+              device.position
+            }
           </div>
         </div>
 
         <ObjectStatus
-          status={device.status}
+          status={
+            device.status
+          }
         />
       </div>
 
       <button
-        onPointerDown={onOpen}
+        onPointerDown={
+          onOpen
+        }
         style={{
           width: "100%",
           marginTop: 12,
@@ -1477,7 +2127,8 @@ function DeviceDetail({
                 mutedStyle
               }
             >
-              🏢 {object.name}
+              🏢{" "}
+              {object.name}
             </div>
           </div>
 
@@ -1494,7 +2145,9 @@ function DeviceDetail({
       <div style={cardStyle}>
         <InfoRow
           label="ID zařízení"
-          value={device.id}
+          value={
+            device.id
+          }
         />
 
         {!isHydrant && (
@@ -1576,7 +2229,9 @@ function DeviceDetail({
       <h2>📍 Umístění</h2>
 
       <div style={cardStyle}>
-        <b>{object.name}</b>
+        <b>
+          {object.name}
+        </b>
 
         <div
           style={
@@ -1667,7 +2322,8 @@ function InfoRow({
     >
       <span
         style={{
-          color: "#6b7280",
+          color:
+            "#6b7280",
         }}
       >
         {label}
@@ -1675,7 +2331,8 @@ function InfoRow({
 
       <b
         style={{
-          textAlign: "right",
+          textAlign:
+            "right",
         }}
       >
         {value}
@@ -1699,6 +2356,7 @@ function ObjectStatus({
   ) {
     background =
       "#fef3c7";
+
     color =
       "#92400e";
   }
@@ -1709,6 +2367,7 @@ function ObjectStatus({
   ) {
     background =
       "#fee2e2";
+
     color =
       "#991b1b";
   }
@@ -1810,6 +2469,27 @@ const actionButtonStyle = {
     "left",
   fontWeight: 700,
   fontSize: 15,
+};
+
+const labelStyle = {
+  display: "block",
+  fontWeight: 700,
+  fontSize: 14,
+  marginBottom: 7,
+};
+
+const inputStyle = {
+  width: "100%",
+  boxSizing:
+    "border-box",
+  padding: 13,
+  border:
+    "1px solid #d1d5db",
+  borderRadius: 10,
+  fontSize: 16,
+  marginBottom: 15,
+  background:
+    "white",
 };
 
 export default App;
