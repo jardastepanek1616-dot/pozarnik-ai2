@@ -1,22 +1,20 @@
 const root = document.getElementById("root");
 
-Promise.all([
-  import("react"),
-  import("react-dom/client"),
-  import("./App.jsx")
-])
-  .then(([React, ReactDOM, AppModule]) => {
-    const App = AppModule.default;
-
-    ReactDOM.createRoot(root).render(
-      React.createElement(App)
-    );
+import("react")
+  .then((React) => {
+    root.innerHTML = `
+      <div style="padding:40px;font-family:Arial">
+        <h1>🧯 React se načetl</h1>
+        <p>React modul funguje.</p>
+        <p>Verze: ${React.version}</p>
+      </div>
+    `;
   })
   .catch((error) => {
     root.innerHTML = `
       <div style="padding:40px;font-family:Arial;color:red">
-        <h1>❌ React chyba</h1>
-        <pre style="white-space:pre-wrap">${error.stack || error}</pre>
+        <h1>❌ React se nenačetl</h1>
+        <pre>${error.stack || error}</pre>
       </div>
     `;
   });
