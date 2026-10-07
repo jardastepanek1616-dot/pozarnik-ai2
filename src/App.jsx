@@ -40,10 +40,7 @@ const LEGAL_RULES = {
    VÝPOČTY
 ========================= */
 
-function calculatePeriodicYear(
-  type,
-  lastPeriodicYear
-) {
+function calculatePeriodicYear(type, lastPeriodicYear) {
   const rule = LEGAL_RULES[type];
 
   if (!rule || !lastPeriodicYear) {
@@ -56,10 +53,7 @@ function calculatePeriodicYear(
   );
 }
 
-function calculateLifeEnd(
-  type,
-  manufactureYear
-) {
+function calculateLifeEnd(type, manufactureYear) {
   const rule = LEGAL_RULES[type];
 
   if (!rule || !manufactureYear) {
@@ -85,10 +79,10 @@ const initialObjects = [
 
     devices: [
       {
-        id: "Z-0001",
+        id: "125001",
         type: "VODNI",
         manufacturer: "Příklad výrobce",
-        serial: "VN-125-001",
+        serial: "125001",
         manufactureYear: 2020,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -99,10 +93,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0002",
+        id: "125002",
         type: "PRASKOVY",
         manufacturer: "Příklad výrobce",
-        serial: "PR-125-002",
+        serial: "125002",
         manufactureYear: 2018,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -113,10 +107,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0003",
+        id: "125003",
         type: "CO2",
         manufacturer: "Příklad výrobce",
-        serial: "CO2-125-003",
+        serial: "125003",
         manufactureYear: 2024,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -127,11 +121,11 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0004",
+        id: "1",
         type: "HYDRANT",
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
-        location: "3. patro",
+        location: "1. patro",
         position: "chodba",
         status: "V POŘÁDKU",
       },
@@ -146,10 +140,10 @@ const initialObjects = [
 
     devices: [
       {
-        id: "Z-0101",
+        id: "127001",
         type: "PRASKOVY",
         manufacturer: "Příklad výrobce",
-        serial: "PR-127-001",
+        serial: "127001",
         manufactureYear: 2017,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -160,10 +154,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0102",
+        id: "127002",
         type: "PRASKOVY",
         manufacturer: "Příklad výrobce",
-        serial: "PR-127-002",
+        serial: "127002",
         manufactureYear: 2021,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -174,10 +168,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0103",
+        id: "127003",
         type: "CO2",
         manufacturer: "Příklad výrobce",
-        serial: "CO2-127-001",
+        serial: "127003",
         manufactureYear: 2019,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -188,10 +182,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0104",
+        id: "127004",
         type: "VODNI",
         manufacturer: "Příklad výrobce",
-        serial: "VN-127-001",
+        serial: "127004",
         manufactureYear: 2022,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -202,10 +196,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0105",
+        id: "127005",
         type: "PRASKOVY",
         manufacturer: "Příklad výrobce",
-        serial: "PR-127-003",
+        serial: "127005",
         manufactureYear: 2016,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -216,7 +210,7 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0106",
+        id: "1",
         type: "HYDRANT",
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -235,10 +229,10 @@ const initialObjects = [
 
     devices: [
       {
-        id: "Z-0201",
+        id: "129001",
         type: "VODNI",
         manufacturer: "Příklad výrobce",
-        serial: "VN-129-001",
+        serial: "129001",
         manufactureYear: 2006,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -249,10 +243,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0202",
+        id: "129002",
         type: "PRASKOVY",
         manufacturer: "Příklad výrobce",
-        serial: "PR-129-001",
+        serial: "129002",
         manufactureYear: 2021,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -263,10 +257,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0203",
+        id: "129003",
         type: "CO2",
         manufacturer: "Příklad výrobce",
-        serial: "CO2-129-001",
+        serial: "129003",
         manufactureYear: 2020,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -277,7 +271,7 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0204",
+        id: "1",
         type: "HYDRANT",
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -287,7 +281,7 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0205",
+        id: "2",
         type: "HYDRANT",
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -306,10 +300,10 @@ const initialObjects = [
 
     devices: [
       {
-        id: "Z-0301",
+        id: "131001",
         type: "PRASKOVY",
         manufacturer: "Příklad výrobce",
-        serial: "PR-131-001",
+        serial: "131001",
         manufactureYear: 2022,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -320,10 +314,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0302",
+        id: "131002",
         type: "CO2",
         manufacturer: "Příklad výrobce",
-        serial: "CO2-131-001",
+        serial: "131002",
         manufactureYear: 2023,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -334,10 +328,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0303",
+        id: "131003",
         type: "VODNI",
         manufacturer: "Příklad výrobce",
-        serial: "VN-131-001",
+        serial: "131003",
         manufactureYear: 2021,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -348,7 +342,7 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0304",
+        id: "1",
         type: "HYDRANT",
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -367,10 +361,10 @@ const initialObjects = [
 
     devices: [
       {
-        id: "Z-0401",
+        id: "133001",
         type: "PRASKOVY",
         manufacturer: "Příklad výrobce",
-        serial: "PR-133-001",
+        serial: "133001",
         manufactureYear: 2022,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -381,10 +375,10 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0402",
+        id: "133002",
         type: "VODNI",
         manufacturer: "Příklad výrobce",
-        serial: "VN-133-001",
+        serial: "133002",
         manufactureYear: 2023,
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -395,7 +389,7 @@ const initialObjects = [
       },
 
       {
-        id: "Z-0403",
+        id: "1",
         type: "HYDRANT",
         lastCheck: "15. 4. 2026",
         nextCheck: "15. 4. 2027",
@@ -430,15 +424,13 @@ function App() {
   const selectedObject =
     objects.find(
       (object) =>
-        object.id ===
-        selectedObjectId
+        object.id === selectedObjectId
     );
 
   const selectedDevice =
     selectedObject?.devices.find(
       (device) =>
-        device.id ===
-        selectedDeviceId
+        device.id === selectedDeviceId
     );
 
   function openObject(object) {
@@ -464,8 +456,7 @@ function App() {
       currentObjects.map(
         (object) => {
           if (
-            object.id !==
-            selectedObjectId
+            object.id !== selectedObjectId
           ) {
             return object;
           }
@@ -878,7 +869,7 @@ function Dashboard({
         }}
       >
         <b>
-          🔧 Z-0002 —
+          🔧 127002 —
           Práškový
         </b>
 
@@ -911,7 +902,7 @@ function Dashboard({
         }}
       >
         <b>
-          ⏳ Z-0003 —
+          ⏳ 129001 —
           Vodní
         </b>
 
@@ -1527,6 +1518,9 @@ function AddDeviceModal({
   const [lastPeriodicYear, setLastPeriodicYear] =
     useState("");
 
+  const [hydrantNumber, setHydrantNumber] =
+    useState("");
+
   const [location, setLocation] =
     useState("");
 
@@ -1551,6 +1545,88 @@ function AddDeviceModal({
       return;
     }
 
+    /* =========================
+       KONTROLA HYDRANTU
+    ========================= */
+
+    if (isHydrant) {
+      if (!hydrantNumber.trim()) {
+        alert(
+          "Vyplň prosím číslo hydrantu."
+        );
+        return;
+      }
+
+      if (
+        !/^\d+$/.test(
+          hydrantNumber.trim()
+        )
+      ) {
+        alert(
+          "Číslo hydrantu může obsahovat pouze čísla."
+        );
+        return;
+      }
+
+      const hydrantExists =
+        object.devices.some(
+          (device) =>
+            device.type ===
+              "HYDRANT" &&
+            device.id ===
+              hydrantNumber.trim()
+        );
+
+      if (hydrantExists) {
+        alert(
+          `Hydrant číslo ${hydrantNumber.trim()} už v tomto objektu existuje.`
+        );
+        return;
+      }
+    }
+
+    /* =========================
+       KONTROLA HASIČÁKU
+    ========================= */
+
+    if (
+      !isHydrant &&
+      !serial.trim()
+    ) {
+      alert(
+        "Vyplň prosím výrobní číslo."
+      );
+      return;
+    }
+
+    if (
+      !isHydrant &&
+      !/^\d+$/.test(
+        serial.trim()
+      )
+    ) {
+      alert(
+        "Výrobní číslo může obsahovat pouze čísla."
+      );
+      return;
+    }
+
+    if (
+      !isHydrant &&
+      object.devices.some(
+        (device) =>
+          device.type !==
+            "HYDRANT" &&
+          device.id ===
+            serial.trim()
+      )
+    ) {
+      alert(
+        `Hasičák s výrobním číslem ${serial.trim()} už v tomto objektu existuje.`
+      );
+      return;
+    }
+
     if (
       !isHydrant &&
       !manufactureYear
@@ -1571,19 +1647,9 @@ function AddDeviceModal({
       return;
     }
 
-    const prefix =
-      type === "HYDRANT"
-        ? "H"
-        : type === "CO2"
-        ? "C"
-        : type === "VODNI"
-        ? "V"
-        : "P";
-
-    const newId =
-      `${prefix}-${Date.now()
-        .toString()
-        .slice(-6)}`;
+    const newId = isHydrant
+      ? hydrantNumber.trim()
+      : serial.trim();
 
     const newDevice = {
       id: newId,
@@ -1778,17 +1844,35 @@ function AddDeviceModal({
             </label>
 
             <input
+              type="text"
+              inputMode="numeric"
               value={serial}
               onChange={(e) =>
                 setSerial(
-                  e.target.value
+                  e.target.value.replace(
+                    /\D/g,
+                    ""
+                  )
                 )
               }
-              placeholder="Např. ABC123456"
+              placeholder="Např. 12345678"
               style={
                 inputStyle
               }
             />
+
+            <div
+              style={{
+                color:
+                  "#6b7280",
+                fontSize: 12,
+                marginTop:
+                  -9,
+                marginBottom: 15,
+              }}
+            >
+              Toto číslo bude zároveň ID hasičáku.
+            </div>
 
             <label
               style={labelStyle}
@@ -1890,6 +1974,49 @@ function AddDeviceModal({
           </>
         )}
 
+        {isHydrant && (
+          <>
+            <label
+              style={labelStyle}
+            >
+              Číslo hydrantu
+            </label>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              value={
+                hydrantNumber
+              }
+              onChange={(e) =>
+                setHydrantNumber(
+                  e.target.value.replace(
+                    /\D/g,
+                    ""
+                  )
+                )
+              }
+              placeholder="Např. 1"
+              style={
+                inputStyle
+              }
+            />
+
+            <div
+              style={{
+                color:
+                  "#6b7280",
+                fontSize: 12,
+                marginTop:
+                  -9,
+                marginBottom: 15,
+              }}
+            >
+              Hydranty se v objektu číslují například 1, 2, 3, 4, 5.
+            </div>
+          </>
+        )}
+
         <label
           style={labelStyle}
         >
@@ -1973,7 +2100,7 @@ function DeviceCard({
   const name =
     device.type ===
     "HYDRANT"
-      ? "Hydrant"
+      ? `Hydrant ${device.id}`
       : rule?.name ||
         "Hasicí přístroj";
 
@@ -2099,7 +2226,9 @@ function DeviceDetail({
         {isHydrant
           ? "🚒"
           : rule?.icon}{" "}
-        {device.id}
+        {isHydrant
+          ? `Hydrant ${device.id}`
+          : device.id}
       </h1>
 
       <div style={cardStyle}>
@@ -2118,7 +2247,7 @@ function DeviceDetail({
               }}
             >
               {isHydrant
-                ? "Hydrant"
+                ? `Hydrant ${device.id}`
                 : rule?.name}
             </b>
 
@@ -2173,6 +2302,15 @@ function DeviceDetail({
               }
             />
           </>
+        )}
+
+        {isHydrant && (
+          <InfoRow
+            label="Číslo hydrantu"
+            value={
+              device.id
+            }
+          />
         )}
 
         <InfoRow
