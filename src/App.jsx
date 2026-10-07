@@ -1886,4 +1886,1650 @@ function AddDeviceModal({
             style={{
               border: 0,
               background:
-                "#f
+                "#f3f4f6",
+              borderRadius: 10,
+              padding:
+                "9px 12px",
+              fontSize: 18,
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        <label
+          style={labelStyle}
+        >
+          Typ zařízení
+        </label>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(2, 1fr)",
+            gap: 8,
+            marginBottom: 16,
+          }}
+        >
+          {[
+            ["PRASKOVY", "🧯 Práškový"],
+            ["VODNI", "💧 Vodní"],
+            ["CO2", "❄️ CO₂"],
+            ["HYDRANT", "🚒 Hydrant"],
+          ].map(
+            ([value, label]) => (
+              <button
+                key={value}
+                onPointerDown={() =>
+                  setType(value)
+                }
+                style={{
+                  padding: 13,
+                  border:
+                    type === value
+                      ? "2px solid #111827"
+                      : "1px solid #e5e7eb",
+                  background:
+                    type === value
+                      ? "#f3f4f6"
+                      : "white",
+                  borderRadius: 11,
+                  fontWeight: 700,
+                }}
+              >
+                {label}
+              </button>
+            )
+          )}
+        </div>
+
+        {!isHydrant && (
+          <>
+            <label
+              style={labelStyle}
+            >
+              Výrobce
+            </label>
+
+            <input
+              value={
+                manufacturer
+              }
+              onChange={(e) =>
+                setManufacturer(
+                  e.target.value
+                )
+              }
+              placeholder="Např. Kovové výrobky"
+              style={
+                inputStyle
+              }
+            />
+
+            <label
+              style={labelStyle}
+            >
+              Výrobní číslo
+            </label>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              value={serial}
+              onChange={(e) =>
+                setSerial(
+                  e.target.value.replace(
+                    /\D/g,
+                    ""
+                  )
+                )
+              }
+              placeholder="Např. 12345678"
+              style={
+                inputStyle
+              }
+            />
+
+            <div
+              style={{
+                color:
+                  "#6b7280",
+                fontSize: 12,
+                marginTop:
+                  -9,
+                marginBottom: 15,
+              }}
+            >
+              Toto číslo bude zároveň ID hasičáku.
+            </div>
+
+            <label
+              style={labelStyle}
+            >
+              Rok výroby
+            </label>
+
+            <input
+              type="number"
+              inputMode="numeric"
+              value={
+                manufactureYear
+              }
+              onChange={(e) =>
+                setManufactureYear(
+                  e.target.value
+                )
+              }
+              placeholder="Např. 2020"
+              style={
+                inputStyle
+              }
+            />
+
+            <label
+              style={labelStyle}
+            >
+              Poslední periodická zkouška
+            </label>
+
+            <input
+              type="number"
+              inputMode="numeric"
+              value={
+                lastPeriodicYear
+              }
+              onChange={(e) =>
+                setLastPeriodicYear(
+                  e.target.value
+                )
+              }
+              placeholder="Např. 2025"
+              style={
+                inputStyle
+              }
+            />
+
+            {manufactureYear &&
+              lastPeriodicYear && (
+                <div
+                  style={{
+                    background:
+                      "#f3f4f6",
+                    borderRadius: 12,
+                    padding: 13,
+                    marginBottom: 15,
+                    fontSize: 14,
+                  }}
+                >
+                  <b>
+                    Automaticky
+                    vypočítáno:
+                  </b>
+
+                  <div
+                    style={{
+                      marginTop: 7,
+                    }}
+                  >
+                    🔧 Další periodická
+                    zkouška:{" "}
+                    <b>
+                      {
+                        calculatePeriodicYear(
+                          type,
+                          lastPeriodicYear
+                        )
+                      }
+                    </b>
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: 5,
+                    }}
+                  >
+                    ⏳ Konec životnosti:{" "}
+                    <b>
+                      {
+                        calculateLifeEnd(
+                          type,
+                          manufactureYear
+                        )
+                      }
+                    </b>
+                  </div>
+                </div>
+              )}
+          </>
+        )}
+
+        {isHydrant && (
+          <>
+            <label
+              style={labelStyle}
+            >
+              Číslo hydrantu
+            </label>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              value={
+                hydrantNumber
+              }
+              onChange={(e) =>
+                setHydrantNumber(
+                  e.target.value.replace(
+                    /\D/g,
+                    ""
+                  )
+                )
+              }
+              placeholder="Např. 1"
+              style={
+                inputStyle
+              }
+            />
+
+            <div
+              style={{
+                color:
+                  "#6b7280",
+                fontSize: 12,
+                marginTop:
+                  -9,
+                marginBottom: 15,
+              }}
+            >
+              Hydranty se v objektu číslují například 1, 2, 3, 4, 5.
+            </div>
+          </>
+        )}
+
+        <label
+          style={labelStyle}
+        >
+          Patro / umístění
+        </label>
+
+        <input
+          value={location}
+          onChange={(e) =>
+            setLocation(
+              e.target.value
+            )
+          }
+          placeholder="Např. 2. patro"
+          style={
+            inputStyle
+          }
+        />
+
+        <label
+          style={labelStyle}
+        >
+          Přesné místo
+        </label>
+
+        <input
+          value={position}
+          onChange={(e) =>
+            setPosition(
+              e.target.value
+            )
+          }
+          placeholder="Např. chodba"
+          style={
+            inputStyle
+          }
+        />
+
+        <button
+          onPointerDown={save}
+          style={{
+            width: "100%",
+            background:
+              "#111827",
+            color: "white",
+            border: 0,
+            borderRadius: 12,
+            padding: 16,
+            fontSize: 16,
+            fontWeight: 700,
+            marginTop: 8,
+          }}
+        >
+          ✅ Přidat zařízení
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* =========================
+   KARTA ZAŘÍZENÍ
+========================= */
+
+function DeviceCard({
+  device,
+  onOpen,
+}) {
+  const rule =
+    LEGAL_RULES[
+      device.type
+    ];
+
+  const icon =
+    device.type ===
+    "HYDRANT"
+      ? "🚒"
+      : rule?.icon ||
+        "🧯";
+
+  const name =
+    device.type ===
+    "HYDRANT"
+      ? `Hydrant ${device.id}`
+      : rule?.name ||
+        "Hasicí přístroj";
+
+  return (
+    <div
+      style={{
+        ...cardStyle,
+        marginBottom: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          gap: 10,
+        }}
+      >
+        <div>
+          <b>
+            {icon}{" "}
+            {device.id}
+          </b>
+
+          <div
+            style={
+              mutedStyle
+            }
+          >
+            {name}
+          </div>
+
+          <div
+            style={
+              smallStyle
+            }
+          >
+            {
+              device.location
+            }{" "}
+            •{" "}
+            {
+              device.position
+            }
+          </div>
+        </div>
+
+        <ObjectStatus
+          status={
+            device.status
+          }
+        />
+      </div>
+
+      <button
+        onPointerDown={
+          onOpen
+        }
+        style={{
+          width: "100%",
+          marginTop: 12,
+          background:
+            "#f3f4f6",
+          border:
+            "1px solid #e5e7eb",
+          borderRadius: 10,
+          padding: 11,
+          fontWeight: 700,
+        }}
+      >
+        DETAIL ZAŘÍZENÍ →
+      </button>
+    </div>
+  );
+}
+
+/* =========================
+   DETAIL ZAŘÍZENÍ
+========================= */
+
+function DeviceDetail({
+  device,
+  object,
+  onBack,
+  onInspection,
+}) {
+  const isHydrant =
+    device.type ===
+    "HYDRANT";
+
+  const rule =
+    LEGAL_RULES[
+      device.type
+    ];
+
+  const nextPeriodicYear =
+    calculatePeriodicYear(
+      device.type,
+      device.lastPeriodicYear
+    );
+
+  const lifeEndYear =
+    calculateLifeEnd(
+      device.type,
+      device.manufactureYear
+    );
+
+  const history =
+    Array.isArray(
+      device.history
+    )
+      ? device.history
+      : [];
+
+  return (
+    <>
+      <button
+        onPointerDown={onBack}
+        style={
+          backButtonStyle
+        }
+      >
+        ← Zpět na objekt
+      </button>
+
+      <h1
+        style={{
+          marginTop: 12,
+        }}
+      >
+        {isHydrant
+          ? "🚒"
+          : rule?.icon}{" "}
+        {isHydrant
+          ? `Hydrant ${device.id}`
+          : device.id}
+      </h1>
+
+      <div style={cardStyle}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent:
+              "space-between",
+            gap: 12,
+          }}
+        >
+          <div>
+            <b
+              style={{
+                fontSize: 18,
+              }}
+            >
+              {isHydrant
+                ? `Hydrant ${device.id}`
+                : rule?.name}
+            </b>
+
+            <div
+              style={
+                mutedStyle
+              }
+            >
+              🏢{" "}
+              {object.name}
+            </div>
+          </div>
+
+          <ObjectStatus
+            status={
+              device.status
+            }
+          />
+        </div>
+      </div>
+
+      <h2>📋 Informace</h2>
+
+      <div style={cardStyle}>
+        <InfoRow
+          label="ID zařízení"
+          value={
+            device.id
+          }
+        />
+
+        {!isHydrant && (
+          <>
+            <InfoRow
+              label="Výrobce"
+              value={
+                device.manufacturer
+              }
+            />
+
+            <InfoRow
+              label="Výrobní číslo"
+              value={
+                device.serial
+              }
+            />
+
+            <InfoRow
+              label="Rok výroby"
+              value={
+                device.manufactureYear
+              }
+            />
+          </>
+        )}
+
+        {isHydrant && (
+          <InfoRow
+            label="Číslo hydrantu"
+            value={
+              device.id
+            }
+          />
+        )}
+
+        <InfoRow
+          label="Umístění"
+          value={`${device.location} • ${device.position}`}
+        />
+      </div>
+
+      <h2>
+        📅 Kontroly a lhůty
+      </h2>
+
+      <div style={cardStyle}>
+        <InfoRow
+          label="Poslední kontrola"
+          value={
+            device.lastCheck
+          }
+        />
+
+        <InfoRow
+          label="Další kontrola"
+          value={
+            device.nextCheck
+          }
+        />
+
+        {!isHydrant && (
+          <>
+            <InfoRow
+              label="Poslední periodická zkouška"
+              value={
+                device.lastPeriodicYear
+              }
+            />
+
+            <InfoRow
+              label="Další periodická zkouška"
+              value={
+                nextPeriodicYear
+              }
+            />
+
+            <InfoRow
+              label="Konec životnosti"
+              value={
+                lifeEndYear
+              }
+            />
+          </>
+        )}
+      </div>
+
+      <h2>📍 Umístění</h2>
+
+      <div style={cardStyle}>
+        <b>
+          {object.name}
+        </b>
+
+        <div
+          style={
+            mutedStyle
+          }
+        >
+          {object.address}
+        </div>
+
+        <div
+          style={{
+            marginTop: 10,
+          }}
+        >
+          {device.location}
+        </div>
+
+        <div
+          style={
+            smallStyle
+          }
+        >
+          {device.position}
+        </div>
+      </div>
+
+      {!isHydrant && (
+        <>
+          <h2>🔍 Kontrola</h2>
+
+          <div style={cardStyle}>
+            <button
+              onPointerDown={
+                onInspection
+              }
+              style={{
+                width: "100%",
+                background:
+                  "#111827",
+                color: "white",
+                border: 0,
+                borderRadius: 12,
+                padding: 16,
+                fontSize: 16,
+                fontWeight: 700,
+              }}
+            >
+              🔍 Provést kontrolu
+            </button>
+          </div>
+        </>
+      )}
+
+      <h2>
+        📜 Historie kontrol
+      </h2>
+
+      {history.length === 0 ? (
+        <div style={cardStyle}>
+          <div
+            style={{
+              color:
+                "#6b7280",
+              textAlign:
+                "center",
+              padding: 8,
+            }}
+          >
+            Zatím není žádná
+            uložená kontrola.
+          </div>
+        </div>
+      ) : (
+        history.map(
+          (item) => (
+            <HistoryCard
+              key={item.id}
+              item={item}
+            />
+          )
+        )
+      )}
+
+      <h2>⚙️ Akce</h2>
+
+      <div style={cardStyle}>
+        <button
+          style={
+            actionButtonStyle
+          }
+        >
+          🟢 V pořádku
+        </button>
+
+        {!isHydrant && (
+          <button
+            style={
+              actionButtonStyle
+            }
+          >
+            🔧 Poslat na údržbu
+          </button>
+        )}
+
+        <button
+          style={
+            actionButtonStyle
+          }
+        >
+          ⚠️ Nahlásit závadu
+        </button>
+
+        <button
+          style={
+            actionButtonStyle
+          }
+        >
+          📷 Přidat fotografii
+        </button>
+      </div>
+    </>
+  );
+}
+
+/* =========================
+   KONTROLA HASIČÁKU
+========================= */
+
+function InspectionModal({
+  device,
+  onClose,
+  onSave,
+}) {
+  const [faults, setFaults] =
+    useState([]);
+
+  const [note, setNote] =
+    useState("");
+
+  const [photo, setPhoto] =
+    useState(null);
+
+  const faultOptions = [
+    {
+      id: "PLAST",
+      label: "🧯 Poškozený plášť",
+    },
+    {
+      id: "TLAK",
+      label: "📉 Nízký tlak",
+    },
+    {
+      id: "HADICE",
+      label: "💦 Poškozená hadice",
+    },
+    {
+      id: "PLOMBA",
+      label: "🔒 Chybí plomba / problém s pojistkou",
+    },
+    {
+      id: "PRISTUP",
+      label: "📍 Špatně přístupný",
+    },
+  ];
+
+  function toggleFault(id) {
+    setFaults(
+      (current) =>
+        current.includes(id)
+          ? current.filter(
+              (item) =>
+                item !== id
+            )
+          : [...current, id]
+    );
+  }
+
+  function handlePhoto(event) {
+    const file =
+      event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader =
+      new FileReader();
+
+    reader.onload = () => {
+      setPhoto(
+        reader.result
+      );
+    };
+
+    reader.readAsDataURL(
+      file
+    );
+  }
+
+  function save() {
+    const finalFaults =
+      [...faults];
+
+    /*
+      Poznámka může obsahovat
+      vlastní závadu, která není
+      v nabídce.
+    */
+
+    const trimmedNote =
+      note.trim();
+
+    if (
+      trimmedNote &&
+      !finalFaults.includes(
+        "VLASTNI"
+      )
+    ) {
+      finalFaults.push(
+        "VLASTNI"
+      );
+    }
+
+    onSave({
+      faults: finalFaults,
+      faultLabels:
+        finalFaults.map(
+          (fault) => {
+            const found =
+              faultOptions.find(
+                (option) =>
+                  option.id ===
+                  fault
+              );
+
+            if (found) {
+              return found.label;
+            }
+
+            if (
+              fault ===
+              "VLASTNI"
+            ) {
+              return "📝 Vlastní závada";
+            }
+
+            return fault;
+          }
+        ),
+      note:
+        trimmedNote,
+      photo,
+    });
+  }
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background:
+          "rgba(0,0,0,.5)",
+        zIndex: 200,
+        display: "flex",
+        alignItems:
+          "flex-end",
+        justifyContent:
+          "center",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 850,
+          maxHeight:
+            "94vh",
+          overflowY:
+            "auto",
+          background:
+            "white",
+          borderRadius:
+            "20px 20px 0 0",
+          padding: 20,
+          boxSizing:
+            "border-box",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent:
+              "space-between",
+            alignItems:
+              "center",
+            marginBottom: 18,
+          }}
+        >
+          <div>
+            <h2
+              style={{
+                margin: 0,
+              }}
+            >
+              🔍 Kontrola hasičáku
+            </h2>
+
+            <div
+              style={
+                mutedStyle
+              }
+            >
+              {device.id} •{" "}
+              {
+                LEGAL_RULES[
+                  device.type
+                ]?.name
+              }
+            </div>
+          </div>
+
+          <button
+            onPointerDown={
+              onClose
+            }
+            style={{
+              border: 0,
+              background:
+                "#f3f4f6",
+              borderRadius: 10,
+              padding:
+                "9px 12px",
+              fontSize: 18,
+            }}
+          >
+            ✕
+          </button>
+        </div>
+
+        <div
+          style={{
+            background:
+              "#f9fafb",
+            border:
+              "1px solid #e5e7eb",
+            borderRadius: 13,
+            padding: 14,
+            marginBottom: 18,
+          }}
+        >
+          <b>
+            🏢 Umístění
+          </b>
+
+          <div
+            style={{
+              marginTop: 5,
+              color:
+                "#6b7280",
+            }}
+          >
+            {device.location} •{" "}
+            {device.position}
+          </div>
+        </div>
+
+        <h3
+          style={{
+            marginBottom: 10,
+          }}
+        >
+          Zjištěné závady
+        </h3>
+
+        <div
+          style={{
+            display: "grid",
+            gap: 9,
+          }}
+        >
+          {faultOptions.map(
+            (fault) => {
+              const active =
+                faults.includes(
+                  fault.id
+                );
+
+              return (
+                <button
+                  key={fault.id}
+                  onPointerDown={() =>
+                    toggleFault(
+                      fault.id
+                    )
+                  }
+                  style={{
+                    width:
+                      "100%",
+                    textAlign:
+                      "left",
+                    padding: 14,
+                    border:
+                      active
+                        ? "2px solid #dc2626"
+                        : "1px solid #e5e7eb",
+                    background:
+                      active
+                        ? "#fef2f2"
+                        : "white",
+                    borderRadius: 11,
+                    fontWeight: 700,
+                    color:
+                      active
+                        ? "#991b1b"
+                        : "#111827",
+                  }}
+                >
+                  {fault.label}
+
+                  <span
+                    style={{
+                      float:
+                        "right",
+                      fontSize: 18,
+                    }}
+                  >
+                    {active
+                      ? "☑️"
+                      : "⬜"}
+                  </span>
+                </button>
+              );
+            }
+          )}
+        </div>
+
+        <h3
+          style={{
+            marginTop: 22,
+            marginBottom: 8,
+          }}
+        >
+          📝 Poznámka / vlastní závada
+        </h3>
+
+        <div
+          style={{
+            color:
+              "#6b7280",
+            fontSize: 13,
+            marginBottom: 8,
+          }}
+        >
+          Pokud je problém, který není
+          v nabídce výše, napiš ho sem.
+        </div>
+
+        <textarea
+          value={note}
+          onChange={(e) =>
+            setNote(
+              e.target.value
+            )
+          }
+          placeholder="Např. poškozená rukojeť, uvolněný držák..."
+          rows={4}
+          style={{
+            width: "100%",
+            boxSizing:
+              "border-box",
+            border:
+              "1px solid #d1d5db",
+            borderRadius: 11,
+            padding: 13,
+            fontSize: 15,
+            resize:
+              "vertical",
+          }}
+        />
+
+        <h3
+          style={{
+            marginTop: 22,
+            marginBottom: 8,
+          }}
+        >
+          📷 Fotografie
+        </h3>
+
+        <div
+          style={{
+            color:
+              "#6b7280",
+            fontSize: 13,
+            marginBottom: 10,
+          }}
+        >
+          Fotografie je nepovinná.
+          Můžeš ji přidat například
+          k závadě.
+        </div>
+
+        <label
+          style={{
+            display:
+              "block",
+            border:
+              "1px dashed #9ca3af",
+            borderRadius: 12,
+            padding: 16,
+            textAlign:
+              "center",
+            background:
+              "#f9fafb",
+            cursor:
+              "pointer",
+            fontWeight: 700,
+          }}
+        >
+          📷 Přidat fotografii
+
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={
+              handlePhoto
+            }
+            style={{
+              display:
+                "none",
+            }}
+          />
+        </label>
+
+        {photo && (
+          <div
+            style={{
+              marginTop: 12,
+              position:
+                "relative",
+            }}
+          >
+            <img
+              src={photo}
+              alt="Fotografie kontroly"
+              style={{
+                width: "100%",
+                maxHeight: 300,
+                objectFit:
+                  "contain",
+                borderRadius: 12,
+                border:
+                  "1px solid #e5e7eb",
+                background:
+                  "#f3f4f6",
+              }}
+            />
+
+            <button
+              onPointerDown={() =>
+                setPhoto(null)
+              }
+              style={{
+                position:
+                  "absolute",
+                top: 8,
+                right: 8,
+                border: 0,
+                background:
+                  "rgba(0,0,0,.7)",
+                color: "white",
+                borderRadius:
+                  999,
+                width: 34,
+                height: 34,
+                fontSize: 16,
+              }}
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        <div
+          style={{
+            marginTop: 22,
+            background:
+              faults.length ||
+              note.trim()
+                ? "#fef2f2"
+                : "#f0fdf4",
+            border:
+              faults.length ||
+              note.trim()
+                ? "1px solid #fecaca"
+                : "1px solid #bbf7d0",
+            borderRadius: 12,
+            padding: 14,
+          }}
+        >
+          <b>
+            {faults.length ||
+            note.trim()
+              ? "⚠️ Kontrola se závadou"
+              : "✅ Kontrola bez závad"}
+          </b>
+
+          <div
+            style={{
+              marginTop: 5,
+              fontSize: 13,
+              color:
+                "#6b7280",
+            }}
+          >
+            {faults.length ||
+            note.trim()
+              ? "Po dokončení bude zařízení označeno jako MUSÍ NA ÚDRŽBU."
+              : "Po dokončení bude zařízení označeno jako V POŘÁDKU."}
+          </div>
+        </div>
+
+        <button
+          onPointerDown={
+            save
+          }
+          style={{
+            width: "100%",
+            background:
+              "#111827",
+            color: "white",
+            border: 0,
+            borderRadius: 12,
+            padding: 16,
+            fontSize: 16,
+            fontWeight: 700,
+            marginTop: 16,
+          }}
+        >
+          ✅ Dokončit kontrolu
+        </button>
+
+        <button
+          onPointerDown={
+            onClose
+          }
+          style={{
+            width: "100%",
+            background:
+              "#f3f4f6",
+            color: "#111827",
+            border:
+              "1px solid #e5e7eb",
+            borderRadius: 12,
+            padding: 14,
+            fontSize: 15,
+            fontWeight: 700,
+            marginTop: 9,
+          }}
+        >
+          Zrušit
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* =========================
+   HISTORIE
+========================= */
+
+function HistoryCard({
+  item,
+}) {
+  const hasFault =
+    item.result ===
+    "ZÁVADA";
+
+  return (
+    <div
+      style={{
+        ...cardStyle,
+        borderLeft:
+          hasFault
+            ? "4px solid #dc2626"
+            : "4px solid #16a34a",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          gap: 10,
+        }}
+      >
+        <div>
+          <b>
+            {hasFault
+              ? "⚠️ Kontrola se závadou"
+              : "✅ Kontrola bez závad"}
+          </b>
+
+          <div
+            style={
+              mutedStyle
+            }
+          >
+            {item.date}
+          </div>
+        </div>
+
+        <span
+          style={{
+            background:
+              hasFault
+                ? "#fee2e2"
+                : "#dcfce7",
+            color:
+              hasFault
+                ? "#991b1b"
+                : "#166534",
+            padding:
+              "5px 8px",
+            borderRadius:
+              999,
+            fontSize: 10,
+            fontWeight: 800,
+            height:
+              "fit-content",
+          }}
+        >
+          {item.result}
+        </span>
+      </div>
+
+      {item.faults?.length >
+        0 && (
+        <div
+          style={{
+            marginTop: 12,
+          }}
+        >
+          <b>
+            Zjištěné závady:
+          </b>
+
+          {item.faults.map(
+            (fault, index) => (
+              <div
+                key={index}
+                style={{
+                  marginTop: 5,
+                  color:
+                    "#991b1b",
+                }}
+              >
+                •{" "}
+                {fault
+                  .replace(
+                    "PLAST",
+                    "Poškozený plášť"
+                  )
+                  .replace(
+                    "TLAK",
+                    "Nízký tlak"
+                  )
+                  .replace(
+                    "HADICE",
+                    "Poškozená hadice"
+                  )
+                  .replace(
+                    "PLOMBA",
+                    "Chybí plomba / problém s pojistkou"
+                  )
+                  .replace(
+                    "PRISTUP",
+                    "Špatně přístupný"
+                  )
+                  .replace(
+                    "VLASTNI",
+                    "Vlastní závada"
+                  )}
+              </div>
+            )
+          )}
+        </div>
+      )}
+
+      {item.note && (
+        <div
+          style={{
+            marginTop: 12,
+            background:
+              "#f9fafb",
+            borderRadius: 10,
+            padding: 10,
+          }}
+        >
+          <b>📝 Poznámka:</b>
+
+          <div
+            style={{
+              marginTop: 4,
+            }}
+          >
+            {item.note}
+          </div>
+        </div>
+      )}
+
+      {item.photo && (
+        <img
+          src={item.photo}
+          alt="Fotografie kontroly"
+          style={{
+            width: "100%",
+            maxHeight: 280,
+            objectFit:
+              "contain",
+            borderRadius: 10,
+            marginTop: 12,
+            background:
+              "#f3f4f6",
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+/* =========================
+   POMOCNÉ
+========================= */
+
+function InfoRow({
+  label,
+  value,
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent:
+          "space-between",
+        gap: 15,
+        padding:
+          "11px 0",
+        borderBottom:
+          "1px solid #eee",
+      }}
+    >
+      <span
+        style={{
+          color:
+            "#6b7280",
+        }}
+      >
+        {label}
+      </span>
+
+      <b
+        style={{
+          textAlign:
+            "right",
+        }}
+      >
+        {value}
+      </b>
+    </div>
+  );
+}
+
+function ObjectStatus({
+  status,
+}) {
+  let background =
+    "#dcfce7";
+
+  let color =
+    "#166534";
+
+  if (
+    status ===
+    "MUSÍ NA ÚDRŽBU"
+  ) {
+    background =
+      "#fef3c7";
+
+    color =
+      "#92400e";
+  }
+
+  if (
+    status ===
+    "PO EXPIRACI"
+  ) {
+    background =
+      "#fee2e2";
+
+    color =
+      "#991b1b";
+  }
+
+  return (
+    <span
+      style={{
+        background,
+        color,
+        padding:
+          "6px 9px",
+        borderRadius:
+          999,
+        fontSize: 10,
+        fontWeight: 800,
+        whiteSpace:
+          "nowrap",
+        height:
+          "fit-content",
+      }}
+    >
+      {status}
+    </span>
+  );
+}
+
+function Badge({
+  text,
+  background,
+  color,
+}) {
+  return (
+    <span
+      style={{
+        background,
+        color,
+        padding:
+          "6px 9px",
+        borderRadius:
+          999,
+        fontSize: 10,
+        fontWeight: 800,
+        whiteSpace:
+          "nowrap",
+      }}
+    >
+      {text}
+    </span>
+  );
+}
+
+/* =========================
+   STYLY
+========================= */
+
+const cardStyle = {
+  background: "white",
+  border:
+    "1px solid #e5e7eb",
+  borderRadius: 16,
+  padding: 16,
+  marginBottom: 14,
+  boxShadow:
+    "0 2px 8px rgba(0,0,0,.04)",
+};
+
+const mutedStyle = {
+  color: "#6b7280",
+  marginTop: 5,
+};
+
+const smallStyle = {
+  color: "#6b7280",
+  fontSize: 13,
+  lineHeight: 1.5,
+};
+
+const backButtonStyle = {
+  background:
+    "#f3f4f6",
+  border:
+    "1px solid #e5e7eb",
+  borderRadius: 10,
+  padding:
+    "10px 13px",
+  fontWeight: 700,
+};
+
+const actionButtonStyle = {
+  width: "100%",
+  padding: 14,
+  marginBottom: 9,
+  border:
+    "1px solid #e5e7eb",
+  background:
+    "#f9fafb",
+  borderRadius: 11,
+  textAlign:
+    "left",
+  fontWeight: 700,
+  fontSize: 15,
+};
+
+const labelStyle = {
+  display: "block",
+  fontWeight: 700,
+  fontSize: 14,
+  marginBottom: 7,
+};
+
+const inputStyle = {
+  width: "100%",
+  boxSizing:
+    "border-box",
+  padding: 13,
+  border:
+    "1px solid #d1d5db",
+  borderRadius: 10,
+  fontSize: 16,
+  marginBottom: 15,
+  background:
+    "white",
+};
+
+export default App;
