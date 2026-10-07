@@ -198,14 +198,15 @@ function App() {
       </header>
 
     <main style={{ padding: 20, maxWidth: 900, margin: "auto" }}>
-  {screen === "dashboard" && <Dashboard />}
+{screen === "dashboard" && <Dashboard />}
+{screen === "objects" && <Objects />}
 
-  {screen !== "dashboard" && (
-    <>
-      <h1>{menu.find((x) => x[0] === screen)?.[2]}</h1>
-      <p>Tahle část aplikace přijde na řadu za chvíli. 😎</p>
-    </>
-  )}
+{screen !== "dashboard" && screen !== "objects" && (
+  <>
+    <h1>{menu.find((x) => x[0] === screen)?.[2]}</h1>
+    <p>Tahle část aplikace přijde na řadu za chvíli. 😎</p>
+  </>
+)}
 </main>
 
       <nav style={{
