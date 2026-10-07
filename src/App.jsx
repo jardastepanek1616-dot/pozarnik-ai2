@@ -498,6 +498,16 @@ function App() {
     useState(false);
 
   /* =====================================================
+     ROČNÍ PLÁN KONTROL
+  ===================================================== */
+
+  const [controlYear, setControlYear] =
+    useState(2027);
+
+  const [octoberObjects, setOctoberObjects] =
+    useState([]);
+
+  /* =====================================================
      VYBRANÝ OBJEKT / ZAŘÍZENÍ
   ===================================================== */
 
@@ -1251,9 +1261,22 @@ function App() {
           />
         )}
 
+        {screen === "controls" && (
+          <Controls
+            objects={objects}
+            year={controlYear}
+            setYear={setControlYear}
+            octoberObjects={octoberObjects}
+            setOctoberObjects={
+              setOctoberObjects
+            }
+          />
+        )}
+
         {screen !== "dashboard" &&
           screen !== "objects" &&
-          screen !== "stock" && (
+          screen !== "stock" &&
+          screen !== "controls" && (
             <SimplePlaceholder
               screen={screen}
             />
@@ -1523,6 +1546,653 @@ function DashboardStat({
       >
         {text}
       </span>
+    </div>
+  );
+}
+
+/* =========================================================
+   📅 KONTROLY
+========================================================= */
+
+function Controls({
+  objects,
+  year,
+  setYear,
+  octoberObjects,
+  setOctoberObjects,
+}) {
+  const panelObjects = objects.filter(
+    (object) =>
+      object.name
+        .toLowerCase()
+        .includes("panelový dům")
+  );
+
+  const octoberSelectedObjects =
+    panelObjects.filter((object) =>
+      octoberObjects.includes(object.id)
+    );
+
+  const aprilObjects =
+    panelObjects.filter(
+      (object) =>
+        !octoberObjects.includes(object.id)
+    );
+
+  function changeYear(direction) {
+    const nextYear = year + direction;
+
+    if (nextYear < 2027) {
+      return;
+    }
+
+    setYear(nextYear);
+
+    /*
+      Každý rok má vlastní plán.
+      V prototypu zatím necháváme říjnový
+      výběr prázdný, aby se automaticky
+      nevybraly první dva objekty.
+    */
+    if (nextYear !== year) {
+      setOctoberObjects([]);
+    }
+  }
+
+  function toggleOctoberObject(objectId) {
+    setOctoberObjects((current) => {
+      if (current.includes(objectId)) {
+        return current.filter(
+          (id) => id !== objectId
+        );
+      }
+
+      if (current.length >= 2) {
+        alert(
+          "V říjnu mohou být vybrány přesně 2 objekty."
+        );
+        return current;
+      }
+
+      return [...current, objectId];
+    });
+  }
+
+  function isObjectComplete(object) {
+    /*
+      Objekt je HOTOVO, pokud má zařízení
+      kontrolované v daném roce.
+
+      V tomto prototypu kontrolujeme rok
+      podle data poslední kontroly.
+    */
+
+    if (!object.devices.length) {
+      return true;
+    }
+
+    return object.devices.every(
+      (device) => {
+        if (!device.lastCheck) {
+          return false;
+        }
+
+        const match =
+          String(device.lastCheck).match(
+            /(\d{4})$/
+          );
+
+        if (!match) {
+          return false;
+        }
+
+        return (
+          Number(match[1]) === year
+        );
+      }
+    );
+  }
+
+  function getMonthCompletion(
+    monthObjects
+  ) {
+    const completed =
+      monthObjects.filter(
+        (object) =>
+          isObjectComplete(object)
+      ).length;
+
+    return {
+      completed,
+      total: monthObjects.length,
+      remaining:
+        monthObjects.length -
+        completed,
+    };
+  }
+
+  const april =
+    getMonthCompletion(
+      aprilObjects
+    );
+
+  const october =
+    getMonthCompletion(
+      octoberSelectedObjects
+    );
+
+  const aprilPercent =
+    april.total === 0
+      ? 0
+      : Math.round(
+          (april.completed /
+            april.total) *
+            100
+        );
+
+  const octoberPercent =
+    october.total === 0
+      ? 0
+      : Math.round(
+          (october.completed /
+            october.total) *
+            100
+        );
+
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          alignItems: "center",
+          marginBottom: 18,
+        }}
+      >
+        <div>
+          <h1 style={{ margin: 0 }}>
+            📅 Kontroly
+          </h1>
+
+          <div
+            style={{
+              color: "#6b7280",
+              marginTop: 4,
+              fontSize: 13,
+            }}
+          >
+            Roční plán kontrol objektů
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 7,
+          }}
+        >
+          <button
+            onPointerDown={() =>
+              changeYear(-1)
+            }
+            style={yearButtonStyle}
+          >
+            ◀️
+          </button>
+
+          <b
+            style={{
+              fontSize: 19,
+              minWidth: 55,
+              textAlign: "center",
+            }}
+          >
+            {year}
+          </b>
+
+          <button
+            onPointerDown={() =>
+              changeYear(1)
+            }
+            style={yearButtonStyle}
+          >
+            ▶️
+          </button>
+        </div>
+      </div>
+
+      {/* =================================================
+          DUBEN
+      ================================================= */}
+
+      <div
+        style={{
+          ...cardStyle,
+          borderTop:
+            "5px solid #2563eb",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent:
+              "space-between",
+            gap: 10,
+            alignItems: "flex-start",
+          }}
+        >
+          <div>
+            <b
+              style={{
+                fontSize: 20,
+              }}
+            >
+              🟦 Duben
+            </b>
+
+            <div
+              style={{
+                color: "#6b7280",
+                fontSize: 13,
+                marginTop: 4,
+              }}
+            >
+              Hlavní roční kontrola
+            </div>
+          </div>
+
+          <Badge
+            text={`${april.completed} / ${april.total}`}
+            background="#dbeafe"
+            color="#1d4ed8"
+          />
+        </div>
+
+        <div
+          style={{
+            marginTop: 18,
+            display: "flex",
+            justifyContent:
+              "space-between",
+            fontSize: 14,
+          }}
+        >
+          <b>
+            {april.completed} hotovo
+          </b>
+
+          <span
+            style={{
+              color: "#6b7280",
+            }}
+          >
+            {april.remaining} zbývá
+          </span>
+        </div>
+
+        <div
+          style={{
+            height: 10,
+            background: "#e5e7eb",
+            borderRadius: 999,
+            overflow: "hidden",
+            marginTop: 8,
+          }}
+        >
+          <div
+            style={{
+              width: `${aprilPercent}%`,
+              height: "100%",
+              background: "#2563eb",
+              borderRadius: 999,
+              transition:
+                "width .2s ease",
+            }}
+          />
+        </div>
+      </div>
+
+      <h2
+        style={{
+          marginTop: 24,
+          marginBottom: 12,
+        }}
+      >
+        🏢 Objekty v dubnu
+      </h2>
+
+      {aprilObjects.length === 0 ? (
+        <EmptyBox
+          icon="📅"
+          title="Žádné objekty"
+          text="Pro duben zatím nejsou žádné objekty."
+        />
+      ) : (
+        aprilObjects.map(
+          (object) => (
+            <ControlObjectCard
+              key={object.id}
+              object={object}
+              completed={isObjectComplete(
+                object
+              )}
+            />
+          )
+        )
+      )}
+
+      {/* =================================================
+          ŘÍJEN
+      ================================================= */}
+
+      <div
+        style={{
+          ...cardStyle,
+          marginTop: 28,
+          borderTop:
+            "5px solid #f97316",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent:
+              "space-between",
+            gap: 10,
+            alignItems: "flex-start",
+          }}
+        >
+          <div>
+            <b
+              style={{
+                fontSize: 20,
+              }}
+            >
+              🟧 Říjen
+            </b>
+
+            <div
+              style={{
+                color: "#6b7280",
+                fontSize: 13,
+                marginTop: 4,
+              }}
+            >
+              Dva vybrané objekty
+            </div>
+          </div>
+
+          <Badge
+            text={`${october.completed} / 2`}
+            background="#ffedd5"
+            color="#c2410c"
+          />
+        </div>
+
+        <div
+          style={{
+            marginTop: 18,
+            display: "flex",
+            justifyContent:
+              "space-between",
+            fontSize: 14,
+          }}
+        >
+          <b>
+            {october.completed} hotovo
+          </b>
+
+          <span
+            style={{
+              color: "#6b7280",
+            }}
+          >
+            {2 - october.completed} zbývá
+          </span>
+        </div>
+
+        <div
+          style={{
+            height: 10,
+            background: "#e5e7eb",
+            borderRadius: 999,
+            overflow: "hidden",
+            marginTop: 8,
+          }}
+        >
+          <div
+            style={{
+              width: `${octoberPercent}%`,
+              height: "100%",
+              background: "#f97316",
+              borderRadius: 999,
+              transition:
+                "width .2s ease",
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            marginTop: 15,
+            background: "#fff7ed",
+            border:
+              "1px solid #fed7aa",
+            borderRadius: 12,
+            padding: 12,
+          }}
+        >
+          <b>
+            Vybráno:{" "}
+            {octoberSelectedObjects.length} / 2
+          </b>
+
+          <div
+            style={{
+              color: "#9a3412",
+              fontSize: 13,
+              marginTop: 5,
+            }}
+          >
+            Vyber přesně dva panelové
+            domy, které se mají kontrolovat
+            v říjnu.
+          </div>
+        </div>
+
+        <h3
+          style={{
+            marginTop: 20,
+            marginBottom: 10,
+          }}
+        >
+          Vybrat objekty pro říjen
+        </h3>
+
+        {panelObjects.map(
+          (object) => {
+            const selected =
+              octoberObjects.includes(
+                object.id
+              );
+
+            const disabled =
+              !selected &&
+              octoberObjects.length >= 2;
+
+            return (
+              <button
+                key={object.id}
+                onPointerDown={() =>
+                  toggleOctoberObject(
+                    object.id
+                  )
+                }
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  padding: 14,
+                  marginBottom: 8,
+                  border:
+                    selected
+                      ? "2px solid #f97316"
+                      : "1px solid #e5e7eb",
+                  background:
+                    selected
+                      ? "#fff7ed"
+                      : disabled
+                      ? "#f9fafb"
+                      : "white",
+                  borderRadius: 12,
+                  opacity:
+                    disabled
+                      ? 0.55
+                      : 1,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent:
+                      "space-between",
+                    gap: 10,
+                  }}
+                >
+                  <div>
+                    <b>
+                      🏢 {object.name}
+                    </b>
+
+                    <div
+                      style={{
+                        color:
+                          "#6b7280",
+                        fontSize: 13,
+                        marginTop: 4,
+                      }}
+                    >
+                      {object.address}
+                    </div>
+                  </div>
+
+                  <span
+                    style={{
+                      fontSize: 21,
+                    }}
+                  >
+                    {selected
+                      ? "☑️"
+                      : "⬜"}
+                  </span>
+                </div>
+              </button>
+            );
+          }
+        )}
+
+        {octoberSelectedObjects.length ===
+          2 && (
+          <div
+            style={{
+              marginTop: 8,
+              background: "#f0fdf4",
+              border:
+                "1px solid #bbf7d0",
+              borderRadius: 12,
+              padding: 12,
+              color: "#166534",
+              fontSize: 13,
+            }}
+          >
+            ✅ Pro říjen jsou vybrány
+            přesně 2 objekty.
+          </div>
+        )}
+      </div>
+
+      <h2
+        style={{
+          marginTop: 28,
+          marginBottom: 12,
+        }}
+      >
+        🏢 Objekty v říjnu
+      </h2>
+
+      {octoberSelectedObjects.length ===
+      0 ? (
+        <EmptyBox
+          icon="🟧"
+          title="Říjen zatím není vybraný"
+          text="Vyber přesně dva panelové domy výše."
+        />
+      ) : (
+        octoberSelectedObjects.map(
+          (object) => (
+            <ControlObjectCard
+              key={object.id}
+              object={object}
+              completed={isObjectComplete(
+                object
+              )}
+            />
+          )
+        )
+      )}
+    </>
+  );
+}
+
+/* =========================================================
+   KARTA OBJEKTU V KONTROLÁCH
+========================================================= */
+
+function ControlObjectCard({
+  object,
+  completed,
+}) {
+  return (
+    <div
+      style={{
+        ...cardStyle,
+        marginBottom: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          gap: 12,
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <b>
+            🏢 {object.name}
+          </b>
+
+          <div style={mutedStyle}>
+            {object.address}
+          </div>
+        </div>
+
+        {completed ? (
+          <Badge
+            text="HOTOVO"
+            background="#dcfce7"
+            color="#166534"
+          />
+        ) : (
+          <Badge
+            text="ČEKÁ"
+            background="#fef3c7"
+            color="#92400e"
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -4133,6 +4803,14 @@ const primaryButtonStyle = {
   padding: 16,
   fontSize: 16,
   fontWeight: 700,
+};
+
+const yearButtonStyle = {
+  border: "1px solid #e5e7eb",
+  background: "white",
+  borderRadius: 10,
+  padding: "9px 10px",
+  fontSize: 15,
 };
 
 const labelStyle = {
