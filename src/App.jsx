@@ -47,10 +47,7 @@ function calculatePeriodicYear(type, lastPeriodicYear) {
     return null;
   }
 
-  return (
-    Number(lastPeriodicYear) +
-    rule.periodicYears
-  );
+  return Number(lastPeriodicYear) + rule.periodicYears;
 }
 
 function calculateLifeEnd(type, manufactureYear) {
@@ -60,10 +57,22 @@ function calculateLifeEnd(type, manufactureYear) {
     return null;
   }
 
-  return (
-    Number(manufactureYear) +
-    rule.lifeYears
-  );
+  return Number(manufactureYear) + rule.lifeYears;
+}
+
+/* =========================
+   POMOCNÉ FUNKCE
+========================= */
+
+function formatDate(date = new Date()) {
+  return date.toLocaleDateString("cs-CZ");
+}
+
+function getNextAnnualCheck(date = new Date()) {
+  const next = new Date(date);
+  next.setFullYear(next.getFullYear() + 1);
+
+  return formatDate(next);
 }
 
 /* =========================
@@ -90,6 +99,7 @@ const initialObjects = [
         location: "1. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -104,6 +114,7 @@ const initialObjects = [
         location: "2. patro",
         position: "chodba",
         status: "MUSÍ NA ÚDRŽBU",
+        history: [],
       },
 
       {
@@ -118,6 +129,7 @@ const initialObjects = [
         location: "přízemí",
         position: "elektro rozvodna",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -128,6 +140,7 @@ const initialObjects = [
         location: "1. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
     ],
   },
@@ -151,6 +164,7 @@ const initialObjects = [
         location: "1. patro",
         position: "chodba",
         status: "MUSÍ NA ÚDRŽBU",
+        history: [],
       },
 
       {
@@ -165,6 +179,7 @@ const initialObjects = [
         location: "2. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -179,6 +194,7 @@ const initialObjects = [
         location: "přízemí",
         position: "elektro rozvodna",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -193,6 +209,7 @@ const initialObjects = [
         location: "3. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -207,6 +224,7 @@ const initialObjects = [
         location: "4. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -217,6 +235,7 @@ const initialObjects = [
         location: "1. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
     ],
   },
@@ -240,6 +259,7 @@ const initialObjects = [
         location: "1. patro",
         position: "chodba",
         status: "PO EXPIRACI",
+        history: [],
       },
 
       {
@@ -254,6 +274,7 @@ const initialObjects = [
         location: "2. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -268,6 +289,7 @@ const initialObjects = [
         location: "přízemí",
         position: "elektro rozvodna",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -278,6 +300,7 @@ const initialObjects = [
         location: "3. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -288,6 +311,7 @@ const initialObjects = [
         location: "4. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
     ],
   },
@@ -311,6 +335,7 @@ const initialObjects = [
         location: "1. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -325,6 +350,7 @@ const initialObjects = [
         location: "přízemí",
         position: "elektro rozvodna",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -339,6 +365,7 @@ const initialObjects = [
         location: "2. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -349,6 +376,7 @@ const initialObjects = [
         location: "2. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
     ],
   },
@@ -372,6 +400,7 @@ const initialObjects = [
         location: "1. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -386,6 +415,7 @@ const initialObjects = [
         location: "2. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
 
       {
@@ -396,6 +426,7 @@ const initialObjects = [
         location: "2. patro",
         position: "chodba",
         status: "V POŘÁDKU",
+        history: [],
       },
     ],
   },
@@ -419,6 +450,9 @@ function App() {
     useState(null);
 
   const [showAddDevice, setShowAddDevice] =
+    useState(false);
+
+  const [showInspection, setShowInspection] =
     useState(false);
 
   const selectedObject =
@@ -474,6 +508,85 @@ function App() {
     );
 
     setShowAddDevice(false);
+  }
+
+  function finishInspection(result) {
+    const today = new Date();
+
+    const historyItem = {
+      id: Date.now(),
+      date: formatDate(today),
+      type: "ROČNÍ KONTROLA",
+      result:
+        result.faults.length > 0
+          ? "ZÁVADA"
+          : "V POŘÁDKU",
+      faults: result.faults,
+      note: result.note,
+      photo: result.photo || null,
+    };
+
+    setObjects((currentObjects) =>
+      currentObjects.map(
+        (object) => {
+          if (
+            object.id !== selectedObjectId
+          ) {
+            return object;
+          }
+
+          return {
+            ...object,
+
+            devices:
+              object.devices.map(
+                (device) => {
+                  if (
+                    device.id !==
+                    selectedDeviceId
+                  ) {
+                    return device;
+                  }
+
+                  const history =
+                    Array.isArray(
+                      device.history
+                    )
+                      ? device.history
+                      : [];
+
+                  return {
+                    ...device,
+
+                    lastCheck:
+                      formatDate(
+                        today
+                      ),
+
+                    nextCheck:
+                      getNextAnnualCheck(
+                        today
+                      ),
+
+                    status:
+                      result.faults
+                        .length > 0
+                        ? "MUSÍ NA ÚDRŽBU"
+                        : "V POŘÁDKU",
+
+                    history: [
+                      historyItem,
+                      ...history,
+                    ],
+                  };
+                }
+              ),
+          };
+        }
+      )
+    );
+
+    setShowInspection(false);
   }
 
   return (
@@ -582,6 +695,11 @@ function App() {
               }
               onBack={
                 backToObject
+              }
+              onInspection={() =>
+                setShowInspection(
+                  true
+                )
               }
             />
           )}
@@ -698,6 +816,24 @@ function App() {
               )
             }
             onSave={addDevice}
+          />
+        )}
+
+      {showInspection &&
+        selectedObject &&
+        selectedDevice && (
+          <InspectionModal
+            device={
+              selectedDevice
+            }
+            onClose={() =>
+              setShowInspection(
+                false
+              )
+            }
+            onSave={
+              finishInspection
+            }
           />
         )}
     </div>
@@ -1545,10 +1681,6 @@ function AddDeviceModal({
       return;
     }
 
-    /* =========================
-       KONTROLA HYDRANTU
-    ========================= */
-
     if (isHydrant) {
       if (!hydrantNumber.trim()) {
         alert(
@@ -1584,10 +1716,6 @@ function AddDeviceModal({
         return;
       }
     }
-
-    /* =========================
-       KONTROLA HASIČÁKU
-    ========================= */
 
     if (
       !isHydrant &&
@@ -1666,6 +1794,8 @@ function AddDeviceModal({
 
       status:
         "V POŘÁDKU",
+
+      history: [],
     };
 
     if (!isHydrant) {
@@ -1756,878 +1886,4 @@ function AddDeviceModal({
             style={{
               border: 0,
               background:
-                "#f3f4f6",
-              borderRadius: 10,
-              padding:
-                "9px 12px",
-              fontSize: 18,
-            }}
-          >
-            ✕
-          </button>
-        </div>
-
-        <label
-          style={labelStyle}
-        >
-          Typ zařízení
-        </label>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(2, 1fr)",
-            gap: 8,
-            marginBottom: 16,
-          }}
-        >
-          {[
-            ["PRASKOVY", "🧯 Práškový"],
-            ["VODNI", "💧 Vodní"],
-            ["CO2", "❄️ CO₂"],
-            ["HYDRANT", "🚒 Hydrant"],
-          ].map(
-            ([value, label]) => (
-              <button
-                key={value}
-                onPointerDown={() =>
-                  setType(value)
-                }
-                style={{
-                  padding: 13,
-                  border:
-                    type === value
-                      ? "2px solid #111827"
-                      : "1px solid #e5e7eb",
-                  background:
-                    type === value
-                      ? "#f3f4f6"
-                      : "white",
-                  borderRadius: 11,
-                  fontWeight: 700,
-                }}
-              >
-                {label}
-              </button>
-            )
-          )}
-        </div>
-
-        {!isHydrant && (
-          <>
-            <label
-              style={labelStyle}
-            >
-              Výrobce
-            </label>
-
-            <input
-              value={
-                manufacturer
-              }
-              onChange={(e) =>
-                setManufacturer(
-                  e.target.value
-                )
-              }
-              placeholder="Např. Kovové výrobky"
-              style={
-                inputStyle
-              }
-            />
-
-            <label
-              style={labelStyle}
-            >
-              Výrobní číslo
-            </label>
-
-            <input
-              type="text"
-              inputMode="numeric"
-              value={serial}
-              onChange={(e) =>
-                setSerial(
-                  e.target.value.replace(
-                    /\D/g,
-                    ""
-                  )
-                )
-              }
-              placeholder="Např. 12345678"
-              style={
-                inputStyle
-              }
-            />
-
-            <div
-              style={{
-                color:
-                  "#6b7280",
-                fontSize: 12,
-                marginTop:
-                  -9,
-                marginBottom: 15,
-              }}
-            >
-              Toto číslo bude zároveň ID hasičáku.
-            </div>
-
-            <label
-              style={labelStyle}
-            >
-              Rok výroby
-            </label>
-
-            <input
-              type="number"
-              inputMode="numeric"
-              value={
-                manufactureYear
-              }
-              onChange={(e) =>
-                setManufactureYear(
-                  e.target.value
-                )
-              }
-              placeholder="Např. 2020"
-              style={
-                inputStyle
-              }
-            />
-
-            <label
-              style={labelStyle}
-            >
-              Poslední periodická zkouška
-            </label>
-
-            <input
-              type="number"
-              inputMode="numeric"
-              value={
-                lastPeriodicYear
-              }
-              onChange={(e) =>
-                setLastPeriodicYear(
-                  e.target.value
-                )
-              }
-              placeholder="Např. 2025"
-              style={
-                inputStyle
-              }
-            />
-
-            {manufactureYear &&
-              lastPeriodicYear && (
-                <div
-                  style={{
-                    background:
-                      "#f3f4f6",
-                    borderRadius: 12,
-                    padding: 13,
-                    marginBottom: 15,
-                    fontSize: 14,
-                  }}
-                >
-                  <b>
-                    Automaticky
-                    vypočítáno:
-                  </b>
-
-                  <div
-                    style={{
-                      marginTop: 7,
-                    }}
-                  >
-                    🔧 Další periodická
-                    zkouška:{" "}
-                    <b>
-                      {
-                        calculatePeriodicYear(
-                          type,
-                          lastPeriodicYear
-                        )
-                      }
-                    </b>
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop: 5,
-                    }}
-                  >
-                    ⏳ Konec životnosti:{" "}
-                    <b>
-                      {
-                        calculateLifeEnd(
-                          type,
-                          manufactureYear
-                        )
-                      }
-                    </b>
-                  </div>
-                </div>
-              )}
-          </>
-        )}
-
-        {isHydrant && (
-          <>
-            <label
-              style={labelStyle}
-            >
-              Číslo hydrantu
-            </label>
-
-            <input
-              type="text"
-              inputMode="numeric"
-              value={
-                hydrantNumber
-              }
-              onChange={(e) =>
-                setHydrantNumber(
-                  e.target.value.replace(
-                    /\D/g,
-                    ""
-                  )
-                )
-              }
-              placeholder="Např. 1"
-              style={
-                inputStyle
-              }
-            />
-
-            <div
-              style={{
-                color:
-                  "#6b7280",
-                fontSize: 12,
-                marginTop:
-                  -9,
-                marginBottom: 15,
-              }}
-            >
-              Hydranty se v objektu číslují například 1, 2, 3, 4, 5.
-            </div>
-          </>
-        )}
-
-        <label
-          style={labelStyle}
-        >
-          Patro / umístění
-        </label>
-
-        <input
-          value={location}
-          onChange={(e) =>
-            setLocation(
-              e.target.value
-            )
-          }
-          placeholder="Např. 2. patro"
-          style={
-            inputStyle
-          }
-        />
-
-        <label
-          style={labelStyle}
-        >
-          Přesné místo
-        </label>
-
-        <input
-          value={position}
-          onChange={(e) =>
-            setPosition(
-              e.target.value
-            )
-          }
-          placeholder="Např. chodba"
-          style={
-            inputStyle
-          }
-        />
-
-        <button
-          onPointerDown={save}
-          style={{
-            width: "100%",
-            background:
-              "#111827",
-            color: "white",
-            border: 0,
-            borderRadius: 12,
-            padding: 16,
-            fontSize: 16,
-            fontWeight: 700,
-            marginTop: 8,
-          }}
-        >
-          ✅ Přidat zařízení
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* =========================
-   KARTA ZAŘÍZENÍ
-========================= */
-
-function DeviceCard({
-  device,
-  onOpen,
-}) {
-  const rule =
-    LEGAL_RULES[
-      device.type
-    ];
-
-  const icon =
-    device.type ===
-    "HYDRANT"
-      ? "🚒"
-      : rule?.icon ||
-        "🧯";
-
-  const name =
-    device.type ===
-    "HYDRANT"
-      ? `Hydrant ${device.id}`
-      : rule?.name ||
-        "Hasicí přístroj";
-
-  return (
-    <div
-      style={{
-        ...cardStyle,
-        marginBottom: 10,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent:
-            "space-between",
-          gap: 10,
-        }}
-      >
-        <div>
-          <b>
-            {icon}{" "}
-            {device.id}
-          </b>
-
-          <div
-            style={
-              mutedStyle
-            }
-          >
-            {name}
-          </div>
-
-          <div
-            style={
-              smallStyle
-            }
-          >
-            {
-              device.location
-            }{" "}
-            •{" "}
-            {
-              device.position
-            }
-          </div>
-        </div>
-
-        <ObjectStatus
-          status={
-            device.status
-          }
-        />
-      </div>
-
-      <button
-        onPointerDown={
-          onOpen
-        }
-        style={{
-          width: "100%",
-          marginTop: 12,
-          background:
-            "#f3f4f6",
-          border:
-            "1px solid #e5e7eb",
-          borderRadius: 10,
-          padding: 11,
-          fontWeight: 700,
-        }}
-      >
-        DETAIL ZAŘÍZENÍ →
-      </button>
-    </div>
-  );
-}
-
-/* =========================
-   DETAIL ZAŘÍZENÍ
-========================= */
-
-function DeviceDetail({
-  device,
-  object,
-  onBack,
-}) {
-  const isHydrant =
-    device.type ===
-    "HYDRANT";
-
-  const rule =
-    LEGAL_RULES[
-      device.type
-    ];
-
-  const nextPeriodicYear =
-    calculatePeriodicYear(
-      device.type,
-      device.lastPeriodicYear
-    );
-
-  const lifeEndYear =
-    calculateLifeEnd(
-      device.type,
-      device.manufactureYear
-    );
-
-  return (
-    <>
-      <button
-        onPointerDown={onBack}
-        style={
-          backButtonStyle
-        }
-      >
-        ← Zpět na objekt
-      </button>
-
-      <h1
-        style={{
-          marginTop: 12,
-        }}
-      >
-        {isHydrant
-          ? "🚒"
-          : rule?.icon}{" "}
-        {isHydrant
-          ? `Hydrant ${device.id}`
-          : device.id}
-      </h1>
-
-      <div style={cardStyle}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent:
-              "space-between",
-            gap: 12,
-          }}
-        >
-          <div>
-            <b
-              style={{
-                fontSize: 18,
-              }}
-            >
-              {isHydrant
-                ? `Hydrant ${device.id}`
-                : rule?.name}
-            </b>
-
-            <div
-              style={
-                mutedStyle
-              }
-            >
-              🏢{" "}
-              {object.name}
-            </div>
-          </div>
-
-          <ObjectStatus
-            status={
-              device.status
-            }
-          />
-        </div>
-      </div>
-
-      <h2>📋 Informace</h2>
-
-      <div style={cardStyle}>
-        <InfoRow
-          label="ID zařízení"
-          value={
-            device.id
-          }
-        />
-
-        {!isHydrant && (
-          <>
-            <InfoRow
-              label="Výrobce"
-              value={
-                device.manufacturer
-              }
-            />
-
-            <InfoRow
-              label="Výrobní číslo"
-              value={
-                device.serial
-              }
-            />
-
-            <InfoRow
-              label="Rok výroby"
-              value={
-                device.manufactureYear
-              }
-            />
-          </>
-        )}
-
-        {isHydrant && (
-          <InfoRow
-            label="Číslo hydrantu"
-            value={
-              device.id
-            }
-          />
-        )}
-
-        <InfoRow
-          label="Umístění"
-          value={`${device.location} • ${device.position}`}
-        />
-      </div>
-
-      <h2>
-        📅 Kontroly a lhůty
-      </h2>
-
-      <div style={cardStyle}>
-        <InfoRow
-          label="Poslední kontrola"
-          value={
-            device.lastCheck
-          }
-        />
-
-        <InfoRow
-          label="Další kontrola"
-          value={
-            device.nextCheck
-          }
-        />
-
-        {!isHydrant && (
-          <>
-            <InfoRow
-              label="Poslední periodická zkouška"
-              value={
-                device.lastPeriodicYear
-              }
-            />
-
-            <InfoRow
-              label="Další periodická zkouška"
-              value={
-                nextPeriodicYear
-              }
-            />
-
-            <InfoRow
-              label="Konec životnosti"
-              value={
-                lifeEndYear
-              }
-            />
-          </>
-        )}
-      </div>
-
-      <h2>📍 Umístění</h2>
-
-      <div style={cardStyle}>
-        <b>
-          {object.name}
-        </b>
-
-        <div
-          style={
-            mutedStyle
-          }
-        >
-          {object.address}
-        </div>
-
-        <div
-          style={{
-            marginTop: 10,
-          }}
-        >
-          {device.location}
-        </div>
-
-        <div
-          style={
-            smallStyle
-          }
-        >
-          {device.position}
-        </div>
-      </div>
-
-      <h2>⚙️ Akce</h2>
-
-      <div style={cardStyle}>
-        <button
-          style={
-            actionButtonStyle
-          }
-        >
-          🟢 V pořádku
-        </button>
-
-        {!isHydrant && (
-          <button
-            style={
-              actionButtonStyle
-            }
-          >
-            🔧 Poslat na údržbu
-          </button>
-        )}
-
-        <button
-          style={
-            actionButtonStyle
-          }
-        >
-          ⚠️ Nahlásit závadu
-        </button>
-
-        <button
-          style={
-            actionButtonStyle
-          }
-        >
-          📷 Přidat fotografii
-        </button>
-      </div>
-    </>
-  );
-}
-
-/* =========================
-   POMOCNÉ
-========================= */
-
-function InfoRow({
-  label,
-  value,
-}) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent:
-          "space-between",
-        gap: 15,
-        padding:
-          "11px 0",
-        borderBottom:
-          "1px solid #eee",
-      }}
-    >
-      <span
-        style={{
-          color:
-            "#6b7280",
-        }}
-      >
-        {label}
-      </span>
-
-      <b
-        style={{
-          textAlign:
-            "right",
-        }}
-      >
-        {value}
-      </b>
-    </div>
-  );
-}
-
-function ObjectStatus({
-  status,
-}) {
-  let background =
-    "#dcfce7";
-
-  let color =
-    "#166534";
-
-  if (
-    status ===
-    "MUSÍ NA ÚDRŽBU"
-  ) {
-    background =
-      "#fef3c7";
-
-    color =
-      "#92400e";
-  }
-
-  if (
-    status ===
-    "PO EXPIRACI"
-  ) {
-    background =
-      "#fee2e2";
-
-    color =
-      "#991b1b";
-  }
-
-  return (
-    <span
-      style={{
-        background,
-        color,
-        padding:
-          "6px 9px",
-        borderRadius:
-          999,
-        fontSize: 10,
-        fontWeight: 800,
-        whiteSpace:
-          "nowrap",
-        height:
-          "fit-content",
-      }}
-    >
-      {status}
-    </span>
-  );
-}
-
-function Badge({
-  text,
-  background,
-  color,
-}) {
-  return (
-    <span
-      style={{
-        background,
-        color,
-        padding:
-          "6px 9px",
-        borderRadius:
-          999,
-        fontSize: 10,
-        fontWeight: 800,
-        whiteSpace:
-          "nowrap",
-      }}
-    >
-      {text}
-    </span>
-  );
-}
-
-/* =========================
-   STYLY
-========================= */
-
-const cardStyle = {
-  background: "white",
-  border:
-    "1px solid #e5e7eb",
-  borderRadius: 16,
-  padding: 16,
-  marginBottom: 14,
-  boxShadow:
-    "0 2px 8px rgba(0,0,0,.04)",
-};
-
-const mutedStyle = {
-  color: "#6b7280",
-  marginTop: 5,
-};
-
-const smallStyle = {
-  color: "#6b7280",
-  fontSize: 13,
-  lineHeight: 1.5,
-};
-
-const backButtonStyle = {
-  background:
-    "#f3f4f6",
-  border:
-    "1px solid #e5e7eb",
-  borderRadius: 10,
-  padding:
-    "10px 13px",
-  fontWeight: 700,
-};
-
-const actionButtonStyle = {
-  width: "100%",
-  padding: 14,
-  marginBottom: 9,
-  border:
-    "1px solid #e5e7eb",
-  background:
-    "#f9fafb",
-  borderRadius: 11,
-  textAlign:
-    "left",
-  fontWeight: 700,
-  fontSize: 15,
-};
-
-const labelStyle = {
-  display: "block",
-  fontWeight: 700,
-  fontSize: 14,
-  marginBottom: 7,
-};
-
-const inputStyle = {
-  width: "100%",
-  boxSizing:
-    "border-box",
-  padding: 13,
-  border:
-    "1px solid #d1d5db",
-  borderRadius: 10,
-  fontSize: 16,
-  marginBottom: 15,
-  background:
-    "white",
-};
-
-export default App;
+                "#f
