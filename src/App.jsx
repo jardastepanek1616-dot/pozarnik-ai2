@@ -9,8 +9,369 @@ const menu = [
   ["more", "•••", "Více"],
 ];
 
+/* =========================
+   DATA
+========================= */
+
+const objectsData = [
+  {
+    id: 1,
+    name: "Panelový dům 125",
+    customer: "SBD Bílina",
+    address: "Bílina, Ulice 125",
+    devices: [
+      {
+        id: "Z-0001",
+        type: "VODNI",
+        name: "Vodní hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "VN-125-001",
+        manufactureYear: 2020,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "1. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0002",
+        type: "PRASKOVY",
+        name: "Práškový hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "PR-125-002",
+        manufactureYear: 2018,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "2. patro",
+        position: "chodba",
+        status: "MUSÍ NA ÚDRŽBU",
+      },
+      {
+        id: "Z-0003",
+        type: "CO2",
+        name: "CO₂ hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "CO2-125-003",
+        manufactureYear: 2024,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "přízemí",
+        position: "elektro rozvodna",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0004",
+        type: "HYDRANT",
+        name: "Nástěnný hydrant",
+        manufacturer: "Příklad výrobce",
+        serial: "HY-125-001",
+        manufactureYear: 2021,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "3. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+    ],
+  },
+
+  {
+    id: 2,
+    name: "Panelový dům 127",
+    customer: "SBD Bílina",
+    address: "Bílina, Ulice 127",
+    devices: [
+      {
+        id: "Z-0101",
+        type: "PRASKOVY",
+        name: "Práškový hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "PR-127-001",
+        manufactureYear: 2017,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "1. patro",
+        position: "chodba",
+        status: "MUSÍ NA ÚDRŽBU",
+      },
+      {
+        id: "Z-0102",
+        type: "PRASKOVY",
+        name: "Práškový hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "PR-127-002",
+        manufactureYear: 2021,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "2. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0103",
+        type: "CO2",
+        name: "CO₂ hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "CO2-127-001",
+        manufactureYear: 2019,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "přízemí",
+        position: "elektro rozvodna",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0104",
+        type: "VODNI",
+        name: "Vodní hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "VN-127-001",
+        manufactureYear: 2022,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "3. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0105",
+        type: "PRASKOVY",
+        name: "Práškový hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "PR-127-003",
+        manufactureYear: 2016,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "4. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0106",
+        type: "HYDRANT",
+        name: "Nástěnný hydrant",
+        manufacturer: "Příklad výrobce",
+        serial: "HY-127-001",
+        manufactureYear: 2021,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "1. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    name: "Panelový dům 129",
+    customer: "SBD Bílina",
+    address: "Bílina, Ulice 129",
+    devices: [
+      {
+        id: "Z-0201",
+        type: "VODNI",
+        name: "Vodní hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "VN-129-001",
+        manufactureYear: 2005,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "1. patro",
+        position: "chodba",
+        status: "PO EXPIRACI",
+      },
+      {
+        id: "Z-0202",
+        type: "PRASKOVY",
+        name: "Práškový hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "PR-129-001",
+        manufactureYear: 2021,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "2. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0203",
+        type: "CO2",
+        name: "CO₂ hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "CO2-129-001",
+        manufactureYear: 2020,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "přízemí",
+        position: "elektro rozvodna",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0204",
+        type: "HYDRANT",
+        name: "Nástěnný hydrant",
+        manufacturer: "Příklad výrobce",
+        serial: "HY-129-001",
+        manufactureYear: 2022,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "3. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0205",
+        type: "HYDRANT",
+        name: "Nástěnný hydrant",
+        manufacturer: "Příklad výrobce",
+        serial: "HY-129-002",
+        manufactureYear: 2022,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "4. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    name: "Panelový dům 131",
+    customer: "SVJ Bílina",
+    address: "Bílina, Ulice 131",
+    devices: [
+      {
+        id: "Z-0301",
+        type: "PRASKOVY",
+        name: "Práškový hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "PR-131-001",
+        manufactureYear: 2022,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "1. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0302",
+        type: "CO2",
+        name: "CO₂ hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "CO2-131-001",
+        manufactureYear: 2023,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "přízemí",
+        position: "elektro rozvodna",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0303",
+        type: "VODNI",
+        name: "Vodní hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "VN-131-001",
+        manufactureYear: 2021,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "2. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0304",
+        type: "HYDRANT",
+        name: "Nástěnný hydrant",
+        manufacturer: "Příklad výrobce",
+        serial: "HY-131-001",
+        manufactureYear: 2021,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "2. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+    ],
+  },
+
+  {
+    id: 5,
+    name: "Panelový dům 133",
+    customer: "SVJ Bílina",
+    address: "Bílina, Ulice 133",
+    devices: [
+      {
+        id: "Z-0401",
+        type: "PRASKOVY",
+        name: "Práškový hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "PR-133-001",
+        manufactureYear: 2022,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "1. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0402",
+        type: "VODNI",
+        name: "Vodní hasicí přístroj",
+        manufacturer: "Příklad výrobce",
+        serial: "VN-133-001",
+        manufactureYear: 2023,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "2. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+      {
+        id: "Z-0403",
+        type: "HYDRANT",
+        name: "Nástěnný hydrant",
+        manufacturer: "Příklad výrobce",
+        serial: "HY-133-001",
+        manufactureYear: 2022,
+        lastCheck: "15. 4. 2026",
+        nextCheck: "15. 4. 2027",
+        location: "2. patro",
+        position: "chodba",
+        status: "V POŘÁDKU",
+      },
+    ],
+  },
+];
+
+/* =========================
+   HLAVNÍ APLIKACE
+========================= */
+
 function App() {
   const [screen, setScreen] = useState("dashboard");
+  const [selectedObject, setSelectedObject] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState(null);
+
+  function openObject(object) {
+    setSelectedObject(object);
+    setSelectedDevice(null);
+  }
+
+  function openDevice(device) {
+    setSelectedDevice(device);
+  }
+
+  function backToObjects() {
+    setSelectedObject(null);
+    setSelectedDevice(null);
+  }
+
+  function backToObject() {
+    setSelectedDevice(null);
+  }
 
   return (
     <div
@@ -36,7 +397,9 @@ function App() {
         }}
       >
         <b style={{ fontSize: 21 }}>🧯 Požárník AI</b>
-        <span style={{ color: "#6b7280", fontSize: 13 }}>React</span>
+        <span style={{ color: "#6b7280", fontSize: 13 }}>
+          React
+        </span>
       </header>
 
       <main
@@ -47,7 +410,26 @@ function App() {
         }}
       >
         {screen === "dashboard" && <Dashboard />}
-        {screen === "objects" && <Objects />}
+
+        {screen === "objects" && !selectedObject && (
+          <Objects onOpenObject={openObject} />
+        )}
+
+        {screen === "objects" && selectedObject && !selectedDevice && (
+          <ObjectDetail
+            object={selectedObject}
+            onBack={backToObjects}
+            onOpenDevice={openDevice}
+          />
+        )}
+
+        {screen === "objects" && selectedObject && selectedDevice && (
+          <DeviceDetail
+            device={selectedDevice}
+            object={selectedObject}
+            onBack={backToObject}
+          />
+        )}
 
         {screen !== "dashboard" && screen !== "objects" && (
           <>
@@ -55,14 +437,7 @@ function App() {
               {menu.find((item) => item[0] === screen)?.[2]}
             </h1>
 
-            <div
-              style={{
-                background: "white",
-                border: "1px solid #e5e7eb",
-                borderRadius: 16,
-                padding: 20,
-              }}
-            >
+            <div style={cardStyle}>
               Tato část aplikace přijde na řadu za chvíli. 😎
             </div>
           </>
@@ -87,7 +462,11 @@ function App() {
         {menu.map(([id, icon, name]) => (
           <button
             key={id}
-            onPointerDown={() => setScreen(id)}
+            onPointerDown={() => {
+              setScreen(id);
+              setSelectedObject(null);
+              setSelectedDevice(null);
+            }}
             style={{
               border: 0,
               background:
@@ -158,18 +537,22 @@ function Dashboard() {
       >
         <DashboardStat number="50" text="objektů" />
         <DashboardStat number="247" text="zařízení" />
+
         <DashboardStat
           number="18"
           text="letos na údržbu"
         />
+
         <DashboardStat
           number="7"
           text="letos končí životnost"
         />
+
         <DashboardStat
           number="3"
           text="aktivní závady"
         />
+
         <DashboardStat
           number="4"
           text="aktuálně na údržbě"
@@ -312,59 +695,11 @@ function FaultRow({ name, count }) {
    OBJEKTY
 ========================= */
 
-function Objects() {
+function Objects({ onOpenObject }) {
   const [customer, setCustomer] = useState("Všichni");
   const [search, setSearch] = useState("");
 
-  const objects = [
-    {
-      id: 1,
-      name: "Panelový dům 125",
-      customer: "SBD Bílina",
-      address: "Bílina, Ulice 125",
-      devices: 4,
-      hydrants: 1,
-      status: "V POŘÁDKU",
-    },
-    {
-      id: 2,
-      name: "Panelový dům 127",
-      customer: "SBD Bílina",
-      address: "Bílina, Ulice 127",
-      devices: 6,
-      hydrants: 1,
-      status: "MUSÍ NA ÚDRŽBU",
-    },
-    {
-      id: 3,
-      name: "Panelový dům 129",
-      customer: "SBD Bílina",
-      address: "Bílina, Ulice 129",
-      devices: 5,
-      hydrants: 2,
-      status: "PO EXPIRACI",
-    },
-    {
-      id: 4,
-      name: "Panelový dům 131",
-      customer: "SVJ Bílina",
-      address: "Bílina, Ulice 131",
-      devices: 8,
-      hydrants: 1,
-      status: "V POŘÁDKU",
-    },
-    {
-      id: 5,
-      name: "Panelový dům 133",
-      customer: "SVJ Bílina",
-      address: "Bílina, Ulice 133",
-      devices: 3,
-      hydrants: 2,
-      status: "V POŘÁDKU",
-    },
-  ];
-
-  const filteredObjects = objects.filter((object) => {
+  const filteredObjects = objectsData.filter((object) => {
     const matchesCustomer =
       customer === "Všichni" ||
       object.customer === customer;
@@ -457,70 +792,95 @@ function Objects() {
           marginBottom: 14,
           fontSize: 16,
           background: "white",
+          boxSizing: "border-box",
         }}
       />
 
-      {filteredObjects.map((object) => (
-        <div
-          key={object.id}
-          style={{
-            ...cardStyle,
-            marginBottom: 12,
-          }}
-        >
+      {filteredObjects.map((object) => {
+        const extinguishers = object.devices.filter(
+          (device) => device.type !== "HYDRANT"
+        );
+
+        const hydrants = object.devices.filter(
+          (device) => device.type === "HYDRANT"
+        );
+
+        const hasExpired = object.devices.some(
+          (device) => device.status === "PO EXPIRACI"
+        );
+
+        const needsMaintenance = object.devices.some(
+          (device) => device.status === "MUSÍ NA ÚDRŽBU"
+        );
+
+        let status = "V POŘÁDKU";
+
+        if (hasExpired) {
+          status = "PO EXPIRACI";
+        } else if (needsMaintenance) {
+          status = "MUSÍ NA ÚDRŽBU";
+        }
+
+        return (
           <div
+            key={object.id}
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 12,
+              ...cardStyle,
+              marginBottom: 12,
             }}
           >
-            <div>
-              <b>🏢 {object.name}</b>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 12,
+              }}
+            >
+              <div>
+                <b>🏢 {object.name}</b>
 
-              <div style={mutedStyle}>
-                {object.customer}
+                <div style={mutedStyle}>
+                  {object.customer}
+                </div>
+
+                <div style={smallStyle}>
+                  {object.address}
+                </div>
               </div>
 
-              <div style={smallStyle}>
-                {object.address}
-              </div>
+              <ObjectStatus status={status} />
             </div>
 
-            <ObjectStatus status={object.status} />
-          </div>
+            <div
+              style={{
+                borderTop: "1px solid #eee",
+                marginTop: 14,
+                paddingTop: 12,
+                color: "#4b5563",
+              }}
+            >
+              🧯 {extinguishers.length} hasičáků
+              {" • "}
+              🚒 {hydrants.length} hydrantů
+            </div>
 
-          <div
-            style={{
-              borderTop: "1px solid #eee",
-              marginTop: 14,
-              paddingTop: 12,
-              color: "#4b5563",
-            }}
-          >
-            🧯 {object.devices} hasičáků
-            {" • "}
-            🚒 {object.hydrants} hydrantů
+            <button
+              onPointerDown={() => onOpenObject(object)}
+              style={{
+                width: "100%",
+                marginTop: 12,
+                background: "#f3f4f6",
+                border: "1px solid #e5e7eb",
+                borderRadius: 10,
+                padding: 11,
+                fontWeight: 700,
+              }}
+            >
+              DETAIL OBJEKTU →
+            </button>
           </div>
-
-          <button
-            onPointerDown={() =>
-              alert(`Detail objektu: ${object.name}`)
-            }
-            style={{
-              width: "100%",
-              marginTop: 12,
-              background: "#f3f4f6",
-              border: "1px solid #e5e7eb",
-              borderRadius: 10,
-              padding: 11,
-              fontWeight: 700,
-            }}
-          >
-            DETAIL OBJEKTU →
-          </button>
-        </div>
-      ))}
+        );
+      })}
 
       {filteredObjects.length === 0 && (
         <div
@@ -535,6 +895,406 @@ function Objects() {
         </div>
       )}
     </>
+  );
+}
+
+/* =========================
+   DETAIL OBJEKTU
+========================= */
+
+function ObjectDetail({
+  object,
+  onBack,
+  onOpenDevice,
+}) {
+  const extinguishers = object.devices.filter(
+    (device) => device.type !== "HYDRANT"
+  );
+
+  const hydrants = object.devices.filter(
+    (device) => device.type === "HYDRANT"
+  );
+
+  const hasExpired = object.devices.some(
+    (device) => device.status === "PO EXPIRACI"
+  );
+
+  const needsMaintenance = object.devices.some(
+    (device) => device.status === "MUSÍ NA ÚDRŽBU"
+  );
+
+  let status = "V POŘÁDKU";
+
+  if (hasExpired) {
+    status = "PO EXPIRACI";
+  } else if (needsMaintenance) {
+    status = "MUSÍ NA ÚDRŽBU";
+  }
+
+  return (
+    <>
+      <button
+        onPointerDown={onBack}
+        style={backButtonStyle}
+      >
+        ← Zpět na objekty
+      </button>
+
+      <h1 style={{ marginTop: 12 }}>
+        🏢 {object.name}
+      </h1>
+
+      <div style={cardStyle}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 10,
+          }}
+        >
+          <div>
+            <b>{object.customer}</b>
+
+            <div style={mutedStyle}>
+              📍 {object.address}
+            </div>
+          </div>
+
+          <ObjectStatus status={status} />
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: 10,
+        }}
+      >
+        <DashboardStat
+          number={extinguishers.length}
+          text="hasičáků"
+        />
+
+        <DashboardStat
+          number={hydrants.length}
+          text="hydrantů"
+        />
+      </div>
+
+      <h2 style={{ marginTop: 28 }}>
+        🧯 Hasicí přístroje
+      </h2>
+
+      {extinguishers.length === 0 && (
+        <div style={cardStyle}>
+          Žádný hasicí přístroj.
+        </div>
+      )}
+
+      {extinguishers.map((device) => (
+        <DeviceCard
+          key={device.id}
+          device={device}
+          onOpen={() => onOpenDevice(device)}
+        />
+      ))}
+
+      <h2 style={{ marginTop: 28 }}>
+        🚒 Hydranty
+      </h2>
+
+      {hydrants.length === 0 && (
+        <div style={cardStyle}>
+          Žádný hydrant.
+        </div>
+      )}
+
+      {hydrants.map((device) => (
+        <DeviceCard
+          key={device.id}
+          device={device}
+          onOpen={() => onOpenDevice(device)}
+        />
+      ))}
+    </>
+  );
+}
+
+/* =========================
+   KARTA ZAŘÍZENÍ
+========================= */
+
+function DeviceCard({ device, onOpen }) {
+  return (
+    <div style={{ ...cardStyle, marginBottom: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 10,
+        }}
+      >
+        <div>
+          <b>
+            {device.type === "HYDRANT"
+              ? "🚒"
+              : device.type === "CO2"
+              ? "❄️"
+              : device.type === "VODNI"
+              ? "💧"
+              : "🧯"}{" "}
+            {device.id}
+          </b>
+
+          <div style={mutedStyle}>
+            {device.name}
+          </div>
+
+          <div style={smallStyle}>
+            {device.location} • {device.position}
+          </div>
+        </div>
+
+        <ObjectStatus status={device.status} />
+      </div>
+
+      <button
+        onPointerDown={onOpen}
+        style={{
+          width: "100%",
+          marginTop: 12,
+          background: "#f3f4f6",
+          border: "1px solid #e5e7eb",
+          borderRadius: 10,
+          padding: 11,
+          fontWeight: 700,
+        }}
+      >
+        DETAIL ZAŘÍZENÍ →
+      </button>
+    </div>
+  );
+}
+
+/* =========================
+   DETAIL ZAŘÍZENÍ
+========================= */
+
+function DeviceDetail({
+  device,
+  object,
+  onBack,
+}) {
+  const isHydrant = device.type === "HYDRANT";
+
+  const periodicYears = {
+    VODNI: 3,
+    PRASKOVY: 5,
+    CO2: 5,
+  };
+
+  const lifeYears = {
+    VODNI: 20,
+    PRASKOVY: 20,
+    CO2: 40,
+  };
+
+  const periodic =
+    periodicYears[device.type];
+
+  const life =
+    lifeYears[device.type];
+
+  return (
+    <>
+      <button
+        onPointerDown={onBack}
+        style={backButtonStyle}
+      >
+        ← Zpět na objekt
+      </button>
+
+      <h1 style={{ marginTop: 12 }}>
+        {isHydrant
+          ? "🚒"
+          : device.type === "CO2"
+          ? "❄️"
+          : device.type === "VODNI"
+          ? "💧"
+          : "🧯"}{" "}
+        {device.id}
+      </h1>
+
+      <div style={cardStyle}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+        >
+          <div>
+            <b style={{ fontSize: 18 }}>
+              {device.name}
+            </b>
+
+            <div style={mutedStyle}>
+              🏢 {object.name}
+            </div>
+          </div>
+
+          <ObjectStatus status={device.status} />
+        </div>
+      </div>
+
+      <h2>📋 Informace</h2>
+
+      <div style={cardStyle}>
+        <InfoRow
+          label="ID zařízení"
+          value={device.id}
+        />
+
+        <InfoRow
+          label="Výrobce"
+          value={device.manufacturer}
+        />
+
+        <InfoRow
+          label="Výrobní číslo"
+          value={device.serial}
+        />
+
+        <InfoRow
+          label="Rok výroby"
+          value={device.manufactureYear}
+        />
+
+        <InfoRow
+          label="Umístění"
+          value={`${device.location} • ${device.position}`}
+        />
+      </div>
+
+      <h2>📅 Kontroly a lhůty</h2>
+
+      <div style={cardStyle}>
+        <InfoRow
+          label="Poslední kontrola"
+          value={device.lastCheck}
+        />
+
+        <InfoRow
+          label="Další kontrola"
+          value={device.nextCheck}
+        />
+
+        {!isHydrant && (
+          <>
+            <InfoRow
+              label="Periodická zkouška"
+              value={`každé ${periodic} roky`}
+            />
+
+            <InfoRow
+              label="Maximální stáří"
+              value={`${life} let`}
+            />
+          </>
+        )}
+
+        {isHydrant && (
+          <div
+            style={{
+              marginTop: 12,
+              background: "#f3f4f6",
+              borderRadius: 10,
+              padding: 12,
+              fontSize: 13,
+              color: "#4b5563",
+            }}
+          >
+            U hydrantu se nepoužívají lhůty
+            určené pro hasicí přístroje.
+          </div>
+        )}
+      </div>
+
+      <h2>📍 Umístění</h2>
+
+      <div style={cardStyle}>
+        <b>{object.name}</b>
+
+        <div style={mutedStyle}>
+          {object.address}
+        </div>
+
+        <div style={{ marginTop: 10 }}>
+          {device.location}
+        </div>
+
+        <div style={smallStyle}>
+          {device.position}
+        </div>
+      </div>
+
+      <h2>⚙️ Akce</h2>
+
+      <div style={cardStyle}>
+        <button
+          style={actionButtonStyle}
+        >
+          🟢 V pořádku
+        </button>
+
+        {!isHydrant && (
+          <button
+            style={actionButtonStyle}
+          >
+            🔧 Poslat na údržbu
+          </button>
+        )}
+
+        <button
+          style={actionButtonStyle}
+        >
+          ⚠️ Nahlásit závadu
+        </button>
+
+        <button
+          style={actionButtonStyle}
+        >
+          📷 Přidat fotografii
+        </button>
+      </div>
+    </>
+  );
+}
+
+/* =========================
+   POMOCNÉ KOMPONENTY
+========================= */
+
+function InfoRow({ label, value }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        gap: 15,
+        padding: "11px 0",
+        borderBottom: "1px solid #eee",
+      }}
+    >
+      <span style={{ color: "#6b7280" }}>
+        {label}
+      </span>
+
+      <b style={{ textAlign: "right" }}>
+        {value}
+      </b>
+    </div>
   );
 }
 
@@ -570,6 +1330,24 @@ function ObjectStatus({ status }) {
   );
 }
 
+function Badge({ text, background, color }) {
+  return (
+    <span
+      style={{
+        background,
+        color,
+        padding: "6px 9px",
+        borderRadius: 999,
+        fontSize: 10,
+        fontWeight: 800,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {text}
+    </span>
+  );
+}
+
 /* =========================
    STYLY
 ========================= */
@@ -594,22 +1372,24 @@ const smallStyle = {
   lineHeight: 1.5,
 };
 
-function Badge({ text, background, color }) {
-  return (
-    <span
-      style={{
-        background,
-        color,
-        padding: "6px 9px",
-        borderRadius: 999,
-        fontSize: 10,
-        fontWeight: 800,
-        whiteSpace: "nowrap",
-      }}
-    >
-      {text}
-    </span>
-  );
-}
+const backButtonStyle = {
+  background: "#f3f4f6",
+  border: "1px solid #e5e7eb",
+  borderRadius: 10,
+  padding: "10px 13px",
+  fontWeight: 700,
+};
+
+const actionButtonStyle = {
+  width: "100%",
+  padding: 14,
+  marginBottom: 9,
+  border: "1px solid #e5e7eb",
+  background: "#f9fafb",
+  borderRadius: 11,
+  textAlign: "left",
+  fontWeight: 700,
+  fontSize: 15,
+};
 
 export default App;
