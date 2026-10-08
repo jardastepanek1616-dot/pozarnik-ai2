@@ -497,10 +497,6 @@ function App() {
         data.manufacturer?.trim() ||
         "",
 
-      model:
-        data.model?.trim() ||
-        "",
-
       manufactureYear:
         data.manufactureYear
           ? Number(
@@ -593,7 +589,8 @@ function App() {
       faults.length > 0 ||
       Boolean(
         result.note?.trim()
-      );
+      ) ||
+      (selectedDevice.activeFaults?.length > 0);
 
     const isHydrant =
       selectedDevice.type ===
@@ -638,8 +635,6 @@ function App() {
         : "V POŘÁDKU",
 
       faults,
-
-      checklist: result.checklist || [],
 
       note:
         result.note?.trim() ||
@@ -706,10 +701,12 @@ function App() {
                           ? "MUSÍ NA ÚDRŽBU"
                           : "V POŘÁDKU",
 
+                      // Aktivní závada se sama nezruší čistou kontrolou.
+                      // Uzavře ji až přesun do údržby / vyřešení.
                       activeFaults:
-                        hasFault
+                        faults.length > 0
                           ? faults
-                          : [],
+                          : device.activeFaults || [],
                     };
                   }
                 ),
@@ -1407,10 +1404,6 @@ function App() {
         data.manufacturer?.trim() ||
         "",
 
-      model:
-        data.model?.trim() ||
-        "",
-
       manufactureYear:
         data.manufactureYear
           ? Number(
@@ -2053,253 +2046,138 @@ function Dashboard({
   lifeEndingThisYear,
   onOpenObject,
 }) {
+  const currentYear = new Date().getFullYear();
   const attention = [];
 
-  objects.forEach(
-    (object) => {
-      object.devices.forEach(
-        (device) => {
-          if (
-            device.nextPeriodicYear &&
-            Number(
-              device.nextPeriodicYear
-            ) ===
-              new Date().getFullYear()
-          ) {
-            attention.push({
-              object,
-              device,
-              status:
-                "PERIODICKÁ ZKOUŠKA",
-            });
-          }
+  objects.forEach((object) => {
+    object.devices.forEach((device) => {
+      if (device.type === "HYDRANT") return;
 
-          if (
-            device.lifeEndYear &&
-            Number(
-              device.lifeEndYear
-            ) ===
-              new Date().getFullYear()
-          ) {
-            attention.push({
-              object,
-              device,
-              status:
-                "KONEC ŽIVOTNOSTI",
-            });
-          }
-        }
-      );
-    }
+      const faults = Array.isArray(device.activeFaults)
+        ? device.activeFaults
+        : [];
+
+      if (faults.length > 0) {
+        attention.push({
+          object,
+          device,
+          kind: "ÚDRŽBA",
+          label: "🔧 Musí na údržbu",
+        });
+      }
+
+      if (
+        device.nextPeriodicYear &&
+        Number(device.nextPeriodicYear) <= currentYear
+      ) {
+        attention.push({
+          object,
+          device,
+          kind: "PERIODICKÁ ZKOUŠKA",
+          label: "🧪 Musí na periodickou zkoušku",
+        });
+      }
+
+      if (
+        device.lifeEndYear &&
+        Number(device.lifeEndYear) <= currentYear
+      ) {
+        attention.push({
+          object,
+          device,
+          kind: "KONEC ŽIVOTNOSTI",
+          label:
+            Number(device.lifeEndYear) < currentYear
+              ? "🔴 Po životnosti"
+              : "⏳ Letos končí životnost",
+        });
+      }
+    });
+  });
+
+  const uniqueAttention = attention.filter(
+    (item, index, array) =>
+      array.findIndex(
+        (other) =>
+          other.device.id === item.device.id &&
+          other.kind === item.kind
+      ) === index
   );
-
-  const uniqueAttention =
-    attention.filter(
-      (item, index, array) =>
-        array.findIndex(
-          (other) =>
-            other.device.id ===
-            item.device.id
-        ) === index
-    );
 
   return (
     <>
-      <h1
-        style={{
-          marginTop: 0,
-        }}
-      >
-        Přehled
-      </h1>
+      <h1 style={{ marginTop: 0 }}>Přehled</h1>
 
-      <div
-        style={
-          statsGrid
-        }
-      >
-        <Stat
-          icon="🏢"
-          number={
-            objects.length
-          }
-          text="objektů"
-        />
-
-        <Stat
-          icon="🧯"
-          number={
-            totalExtinguishers
-          }
-          text="hasičáků"
-        />
-
-        <Stat
-          icon="🚒"
-          number={
-            totalHydrants
-          }
-          text="hydrantů"
-        />
-
-        <Stat
-          icon="📦"
-          number={
-            stock.length
-          }
-          text="na skladě"
-        />
-
-        <Stat
-          icon="🔧"
-          number={
-            maintenance.length
-          }
-          text="na údržbě"
-        />
-
-        <Stat
-          icon="🗄️"
-          number={
-            retired.length
-          }
-          text="vyřazených"
-        />
-
-        <Stat
-          icon="⚠️"
-          number={
-            activeFaults
-          }
-          text="aktivních závad"
-        />
+      <div style={statsGrid}>
+        <Stat icon="🏢" number={objects.length} text="objektů" />
+        <Stat icon="🧯" number={totalExtinguishers} text="hasičáků" />
+        <Stat icon="🚒" number={totalHydrants} text="hydrantů" />
+        <Stat icon="📦" number={stock.length} text="na skladě" />
+        <Stat icon="🔧" number={maintenance.length} text="na údržbě" />
+        <Stat icon="🗄️" number={retired.length} text="vyřazených" />
+        <Stat icon="⚠️" number={activeFaults} text="aktivních závad" />
       </div>
 
-      <div
-        style={
-          cardStyle
-        }
-      >
-        <b>
-          ⏳ Letos končí životnost
-        </b>
-
-        <div
-          style={{
-            fontSize: 28,
-            fontWeight: 800,
-            marginTop: 8,
-          }}
-        >
-          {
-            lifeEndingThisYear
-          }
+      <div style={cardStyle}>
+        <b>⏳ Letos končí životnost</b>
+        <div style={{ fontSize: 28, fontWeight: 800, marginTop: 8 }}>
+          {lifeEndingThisYear}
         </div>
-
-        <div
-          style={
-            mutedStyle
-          }
-        >
-          hasicích přístrojů
-        </div>
+        <div style={mutedStyle}>hasicích přístrojů</div>
       </div>
 
-      <div
-        style={
-          cardStyle
-        }
-      >
-        <b>
-          ⚠️ Co potřebuje pozornost
-        </b>
+      <div style={cardStyle}>
+        <b>⚠️ Co potřebuje pozornost</b>
+        <div style={{ ...mutedStyle, marginTop: 5 }}>
+          Jen hasičáky se závadou, po životnosti nebo s periodickou zkouškou.
+        </div>
 
-        {uniqueAttention.length ===
-        0 ? (
-          <div
-            style={{
-              color:
-                "#15803d",
-              marginTop: 12,
-            }}
-          >
-            🟢 Aktuálně nic
-            kritického.
+        {uniqueAttention.length === 0 ? (
+          <div style={{ color: "#15803d", marginTop: 12 }}>
+            🟢 Aktuálně nic kritického.
           </div>
         ) : (
-          uniqueAttention.map(
-            ({
-              object,
-              device,
-              status,
-            }) => (
-              <button
-                key={
-                  device.id
-                }
-                onPointerDown={() =>
-                  onOpenObject(
-                    object
-                  )
-                }
-                style={{
-                  width:
-                    "100%",
-                  textAlign:
-                    "left",
-                  background:
-                    "#f9fafb",
-                  border:
-                    "1px solid #e5e7eb",
-                  borderRadius: 12,
-                  padding: 12,
-                  marginTop: 10,
-                }}
-              >
-                <b>
-                  {
-                    getDeviceIcon(
-                      device
-                    )
-                  }{" "}
-                  {
-                    device.id
-                  }
-                </b>
-
-                <div
-                  style={
-                    smallStyle
-                  }
-                >
-                  {
-                    object.name
-                  }
+          uniqueAttention.map(({ object, device, label, kind }) => (
+            <button
+              key={`${device.id}-${kind}`}
+              onPointerDown={() => onOpenObject(object)}
+              style={{
+                width: "100%",
+                textAlign: "left",
+                background: "#f9fafb",
+                border: "1px solid #e5e7eb",
+                borderRadius: 12,
+                padding: 12,
+                marginTop: 10,
+              }}
+            >
+              <b>{getDeviceIcon(device)} {device.id}</b>
+              <div style={smallStyle}>{object.name}</div>
+              <div style={{ marginTop: 5, fontWeight: 700 }}>{label}</div>
+              {kind === "KONEC ŽIVOTNOSTI" && (
+                <div style={smallStyle}>
+                  Konec životnosti: {device.lifeEndYear}
                 </div>
-
-                <div
-                  style={{
-                    marginTop: 5,
-                    fontWeight: 700,
-                  }}
-                >
-                  {status ===
-                  "KONEC ŽIVOTNOSTI"
-                    ? "⏳ Končí životnost"
-                    : "🔧 Bude muset na periodickou zkoušku"}
+              )}
+              {kind === "PERIODICKÁ ZKOUŠKA" && (
+                <div style={smallStyle}>
+                  Periodická zkouška: {device.nextPeriodicYear}
                 </div>
-              </button>
-            )
-          )
+              )}
+              {kind === "ÚDRŽBA" && device.activeFaults?.length > 0 && (
+                <div style={smallStyle}>
+                  {device.activeFaults
+                    .map((fault) => (Array.isArray(fault) ? fault[2] : fault))
+                    .join(" • ")}
+                </div>
+              )}
+            </button>
+          ))
         )}
       </div>
     </>
   );
 }
-
-/* =========================================================
-   OBJEKTY
-========================================================= */
 
 function ObjectsScreen({
   objects,
@@ -2908,16 +2786,6 @@ function DeviceDetail({
               <b>
                 {
                   device.manufacturer ||
-                  "—"
-                }
-              </b>
-            </div>
-
-            <div>
-              Model:{" "}
-              <b>
-                {
-                  device.model ||
                   "—"
                 }
               </b>
@@ -5969,9 +5837,6 @@ function AddDeviceModal({
   const [manufacturer, setManufacturer] =
     useState("");
 
-  const [model, setModel] =
-    useState("");
-
   const [manufactureYear, setManufactureYear] =
     useState("");
 
@@ -6008,7 +5873,6 @@ function AddDeviceModal({
       serial,
       number,
       manufacturer,
-      model,
       manufactureYear,
       location,
       note,
@@ -6141,29 +6005,6 @@ function AddDeviceModal({
               labelStyle
             }
           >
-            Model
-          </label>
-
-          <input
-            value={
-              model
-            }
-            onChange={(e) =>
-              setModel(
-                e.target.value
-              )
-            }
-            placeholder="Model"
-            style={
-              inputStyle
-            }
-          />
-
-          <label
-            style={
-              labelStyle
-            }
-          >
             Rok výroby
           </label>
 
@@ -6265,9 +6106,6 @@ function AddStockModal({
   const [manufacturer, setManufacturer] =
     useState("");
 
-  const [model, setModel] =
-    useState("");
-
   const [manufactureYear, setManufactureYear] =
     useState("");
 
@@ -6293,7 +6131,6 @@ function AddStockModal({
       type,
       serial,
       manufacturer,
-      model,
       manufactureYear,
       receivedDate,
       note,
@@ -6380,28 +6217,6 @@ function AddStockModal({
         }
         onChange={(e) =>
           setManufacturer(
-            e.target.value
-          )
-        }
-        style={
-          inputStyle
-        }
-      />
-
-      <label
-        style={
-          labelStyle
-        }
-      >
-        Model
-      </label>
-
-      <input
-        value={
-          model
-        }
-        onChange={(e) =>
-          setModel(
             e.target.value
           )
         }
@@ -6505,9 +6320,6 @@ function InspectionModal({
   const [selectedFaults, setSelectedFaults] =
     useState([]);
 
-  const [checkedItems, setCheckedItems] =
-    useState([]);
-
   const [note, setNote] =
     useState("");
 
@@ -6520,35 +6332,14 @@ function InspectionModal({
         ""
     );
 
-  const isHydrant =
-    device?.type ===
-    "HYDRANT";
-
-  const checklist = isHydrant
-    ? [
-        ["SKRIN", "Vnější stav skříně"],
-        ["HADICE", "Hadice"],
-        ["TRYSKA", "Proudnice / armatury"],
-        ["VENTIL", "Ventil"],
-        ["SPOJE", "Spoje"],
-        ["OZNACENI", "Označení"],
-        ["PRISTUP", "Přístupnost"],
-      ]
-    : [
-        ["PLAST", "Vnější stav přístroje"],
-        ["TLAK", "Tlak / indikace"],
-        ["HADICE", "Hadice"],
-        ["POJISTKA", "Pojistka"],
-        ["PLOMBA", "Plomba"],
-        ["STITTEK", "Štítek a označení"],
-        ["PRISTUP", "Umístění a přístupnost"],
-      ];
-
-  function toggleFault(code) {
+  function toggleFault(
+    code
+  ) {
     const fault =
       FAULTS.find(
         (item) =>
-          item[0] === code
+          item[0] ===
+          code
       );
 
     if (!fault) {
@@ -6560,13 +6351,15 @@ function InspectionModal({
         const exists =
           current.some(
             (item) =>
-              item.code === code
+              item.code ===
+              code
           );
 
         if (exists) {
           return current.filter(
             (item) =>
-              item.code !== code
+              item.code !==
+              code
           );
         }
 
@@ -6574,25 +6367,17 @@ function InspectionModal({
           ...current,
           {
             code,
-            label: fault[2],
+            label:
+              fault[2],
           },
         ];
       }
     );
   }
 
-  function toggleChecklist(code) {
-    setCheckedItems(
-      (current) =>
-        current.includes(code)
-          ? current.filter(
-              (item) => item !== code
-            )
-          : [...current, code]
-    );
-  }
-
-  function handlePhoto(event) {
+  function handlePhoto(
+    event
+  ) {
     const file =
       event.target.files?.[0];
 
@@ -6609,25 +6394,24 @@ function InspectionModal({
       );
     };
 
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(
+      file
+    );
   }
 
   function save() {
     onSave({
-      faults: selectedFaults,
-      checklist: checklist.map(
-        ([code, label]) => ({
-          code,
-          label,
-          checked:
-            checkedItems.includes(code),
-        })
-      ),
+      faults:
+        selectedFaults,
       note,
       photo,
       periodicYear,
     });
   }
+
+  const isHydrant =
+    device?.type ===
+    "HYDRANT";
 
   return (
     <Modal>
@@ -6639,7 +6423,9 @@ function InspectionModal({
           device?.id ||
           ""
         }`}
-        onClose={onClose}
+        onClose={
+          onClose
+        }
       />
 
       <div
@@ -6648,74 +6434,8 @@ function InspectionModal({
         }
       >
         <b>
-          Kontrolní body
+          Co bylo zjištěno?
         </b>
-
-        <div
-          style={smallStyle}
-        >
-          Zaškrtni každý bod, který byl při kontrole zkontrolován.
-        </div>
-
-        <div
-          style={{
-            marginTop: 10,
-          }}
-        >
-          {checklist.map(
-            ([code, label]) => {
-              const checked =
-                checkedItems.includes(
-                  code
-                );
-
-              return (
-                <button
-                  key={code}
-                  onPointerDown={() =>
-                    toggleChecklist(
-                      code
-                    )
-                  }
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    border: checked
-                      ? "2px solid #16a34a"
-                      : "1px solid #e5e7eb",
-                    background: checked
-                      ? "#f0fdf4"
-                      : "white",
-                    borderRadius: 10,
-                    padding: 11,
-                    marginTop: 7,
-                  }}
-                >
-                  {checked
-                    ? "☑️"
-                    : "⬜"}{" "}
-                  {label}
-                </button>
-              );
-            }
-          )}
-        </div>
-      </div>
-
-      <div
-        style={
-          cardInnerStyle
-        }
-      >
-        <b>
-          ⚠️ Závady
-        </b>
-
-        <div
-          style={smallStyle}
-        >
-          Pokud je něco v nevyhovujícím stavu, vyber závadu.
-        </div>
 
         <div
           style={{
@@ -6723,29 +6443,41 @@ function InspectionModal({
           }}
         >
           {FAULTS.map(
-            ([code, icon, label]) => {
+            ([
+              code,
+              icon,
+              label,
+            ]) => {
               const selected =
                 selectedFaults.some(
                   (fault) =>
-                    fault.code === code
+                    fault.code ===
+                    code
                 );
 
               return (
                 <button
                   key={code}
                   onPointerDown={() =>
-                    toggleFault(code)
+                    toggleFault(
+                      code
+                    )
                   }
                   style={{
-                    width: "100%",
-                    textAlign: "left",
-                    border: selected
-                      ? "2px solid #dc2626"
-                      : "1px solid #e5e7eb",
-                    background: selected
-                      ? "#fef2f2"
-                      : "white",
-                    borderRadius: 10,
+                    width:
+                      "100%",
+                    textAlign:
+                      "left",
+                    border:
+                      selected
+                        ? "2px solid #dc2626"
+                        : "1px solid #e5e7eb",
+                    background:
+                      selected
+                        ? "#fef2f2"
+                        : "white",
+                    borderRadius:
+                      10,
                     padding: 11,
                     marginTop: 7,
                   }}
@@ -6754,7 +6486,9 @@ function InspectionModal({
                     ? "☑️"
                     : "⬜"}{" "}
                   {icon}{" "}
-                  {label}
+                  {
+                    label
+                  }
                 </button>
               );
             }
@@ -6773,7 +6507,9 @@ function InspectionModal({
           </b>
 
           <div
-            style={smallStyle}
+            style={
+              smallStyle
+            }
           >
             Pokud byla provedena, zadej rok poslední periodické zkoušky.
           </div>
@@ -6798,13 +6534,17 @@ function InspectionModal({
       )}
 
       <label
-        style={labelStyle}
+        style={
+          labelStyle
+        }
       >
         📝 Poznámka
       </label>
 
       <textarea
-        value={note}
+        value={
+          note
+        }
         onChange={(e) =>
           setNote(
             e.target.value
@@ -6818,7 +6558,9 @@ function InspectionModal({
       />
 
       <label
-        style={labelStyle}
+        style={
+          labelStyle
+        }
       >
         📸 Fotografie
       </label>
@@ -6827,7 +6569,9 @@ function InspectionModal({
         type="file"
         accept="image/*"
         capture="environment"
-        onChange={handlePhoto}
+        onChange={
+          handlePhoto
+        }
         style={{
           marginBottom: 12,
         }}
@@ -6838,17 +6582,23 @@ function InspectionModal({
           src={photo}
           alt="Náhled"
           style={{
-            width: "100%",
-            maxHeight: 220,
-            objectFit: "cover",
-            borderRadius: 12,
+            width:
+              "100%",
+            maxHeight:
+              220,
+            objectFit:
+              "cover",
+            borderRadius:
+              12,
             marginBottom: 12,
           }}
         />
       )}
 
       <button
-        onPointerDown={save}
+        onPointerDown={
+          save
+        }
         style={
           primaryButtonStyle
         }
