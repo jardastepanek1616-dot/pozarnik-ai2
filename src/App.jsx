@@ -100,7 +100,7 @@ const menu = [
 const FAULTS = [
   ["PLAST", "🔩", "Poškozený plášť"],
   ["PLOMBA", "🔒", "Chybí plomba"],
-  ["HADICE", "💦", "Poškozená hadice / tryska"],
+  ["HADICE", "💦", "Poškozená hadice"],
   ["TLAK", "📉", "Nízký tlak"],
   ["DRZAK", "🧱", "Poškozený držák"],
   ["PRISTUP", "🚧", "Špatně přístupný"],
@@ -638,6 +638,8 @@ function App() {
         : "V POŘÁDKU",
 
       faults,
+
+      checklist: result.checklist || [],
 
       note:
         result.note?.trim() ||
@@ -6503,6 +6505,9 @@ function InspectionModal({
   const [selectedFaults, setSelectedFaults] =
     useState([]);
 
+  const [checkedItems, setCheckedItems] =
+    useState([]);
+
   const [note, setNote] =
     useState("");
 
@@ -6515,14 +6520,35 @@ function InspectionModal({
         ""
     );
 
-  function toggleFault(
-    code
-  ) {
+  const isHydrant =
+    device?.type ===
+    "HYDRANT";
+
+  const checklist = isHydrant
+    ? [
+        ["SKRIN", "Vnější stav skříně"],
+        ["HADICE", "Hadice"],
+        ["TRYSKA", "Proudnice / armatury"],
+        ["VENTIL", "Ventil"],
+        ["SPOJE", "Spoje"],
+        ["OZNACENI", "Označení"],
+        ["PRISTUP", "Přístupnost"],
+      ]
+    : [
+        ["PLAST", "Vnější stav přístroje"],
+        ["TLAK", "Tlak / indikace"],
+        ["HADICE", "Hadice"],
+        ["POJISTKA", "Pojistka"],
+        ["PLOMBA", "Plomba"],
+        ["STITTEK", "Štítek a označení"],
+        ["PRISTUP", "Umístění a přístupnost"],
+      ];
+
+  function toggleFault(code) {
     const fault =
       FAULTS.find(
         (item) =>
-          item[0] ===
-          code
+          item[0] === code
       );
 
     if (!fault) {
@@ -6534,15 +6560,13 @@ function InspectionModal({
         const exists =
           current.some(
             (item) =>
-              item.code ===
-              code
+              item.code === code
           );
 
         if (exists) {
           return current.filter(
             (item) =>
-              item.code !==
-              code
+              item.code !== code
           );
         }
 
@@ -6550,17 +6574,25 @@ function InspectionModal({
           ...current,
           {
             code,
-            label:
-              fault[2],
+            label: fault[2],
           },
         ];
       }
     );
   }
 
-  function handlePhoto(
-    event
-  ) {
+  function toggleChecklist(code) {
+    setCheckedItems(
+      (current) =>
+        current.includes(code)
+          ? current.filter(
+              (item) => item !== code
+            )
+          : [...current, code]
+    );
+  }
+
+  function handlePhoto(event) {
     const file =
       event.target.files?.[0];
 
@@ -6577,24 +6609,25 @@ function InspectionModal({
       );
     };
 
-    reader.readAsDataURL(
-      file
-    );
+    reader.readAsDataURL(file);
   }
 
   function save() {
     onSave({
-      faults:
-        selectedFaults,
+      faults: selectedFaults,
+      checklist: checklist.map(
+        ([code, label]) => ({
+          code,
+          label,
+          checked:
+            checkedItems.includes(code),
+        })
+      ),
       note,
       photo,
       periodicYear,
     });
   }
-
-  const isHydrant =
-    device?.type ===
-    "HYDRANT";
 
   return (
     <Modal>
@@ -6606,9 +6639,7 @@ function InspectionModal({
           device?.id ||
           ""
         }`}
-        onClose={
-          onClose
-        }
+        onClose={onClose}
       />
 
       <div
@@ -6617,8 +6648,74 @@ function InspectionModal({
         }
       >
         <b>
-          Co bylo zjištěno?
+          Kontrolní body
         </b>
+
+        <div
+          style={smallStyle}
+        >
+          Zaškrtni každý bod, který byl při kontrole zkontrolován.
+        </div>
+
+        <div
+          style={{
+            marginTop: 10,
+          }}
+        >
+          {checklist.map(
+            ([code, label]) => {
+              const checked =
+                checkedItems.includes(
+                  code
+                );
+
+              return (
+                <button
+                  key={code}
+                  onPointerDown={() =>
+                    toggleChecklist(
+                      code
+                    )
+                  }
+                  style={{
+                    width: "100%",
+                    textAlign: "left",
+                    border: checked
+                      ? "2px solid #16a34a"
+                      : "1px solid #e5e7eb",
+                    background: checked
+                      ? "#f0fdf4"
+                      : "white",
+                    borderRadius: 10,
+                    padding: 11,
+                    marginTop: 7,
+                  }}
+                >
+                  {checked
+                    ? "☑️"
+                    : "⬜"}{" "}
+                  {label}
+                </button>
+              );
+            }
+          )}
+        </div>
+      </div>
+
+      <div
+        style={
+          cardInnerStyle
+        }
+      >
+        <b>
+          ⚠️ Závady
+        </b>
+
+        <div
+          style={smallStyle}
+        >
+          Pokud je něco v nevyhovujícím stavu, vyber závadu.
+        </div>
 
         <div
           style={{
@@ -6626,41 +6723,29 @@ function InspectionModal({
           }}
         >
           {FAULTS.map(
-            ([
-              code,
-              icon,
-              label,
-            ]) => {
+            ([code, icon, label]) => {
               const selected =
                 selectedFaults.some(
                   (fault) =>
-                    fault.code ===
-                    code
+                    fault.code === code
                 );
 
               return (
                 <button
                   key={code}
                   onPointerDown={() =>
-                    toggleFault(
-                      code
-                    )
+                    toggleFault(code)
                   }
                   style={{
-                    width:
-                      "100%",
-                    textAlign:
-                      "left",
-                    border:
-                      selected
-                        ? "2px solid #dc2626"
-                        : "1px solid #e5e7eb",
-                    background:
-                      selected
-                        ? "#fef2f2"
-                        : "white",
-                    borderRadius:
-                      10,
+                    width: "100%",
+                    textAlign: "left",
+                    border: selected
+                      ? "2px solid #dc2626"
+                      : "1px solid #e5e7eb",
+                    background: selected
+                      ? "#fef2f2"
+                      : "white",
+                    borderRadius: 10,
                     padding: 11,
                     marginTop: 7,
                   }}
@@ -6669,9 +6754,7 @@ function InspectionModal({
                     ? "☑️"
                     : "⬜"}{" "}
                   {icon}{" "}
-                  {
-                    label
-                  }
+                  {label}
                 </button>
               );
             }
@@ -6690,9 +6773,7 @@ function InspectionModal({
           </b>
 
           <div
-            style={
-              smallStyle
-            }
+            style={smallStyle}
           >
             Pokud byla provedena, zadej rok poslední periodické zkoušky.
           </div>
@@ -6717,17 +6798,13 @@ function InspectionModal({
       )}
 
       <label
-        style={
-          labelStyle
-        }
+        style={labelStyle}
       >
         📝 Poznámka
       </label>
 
       <textarea
-        value={
-          note
-        }
+        value={note}
         onChange={(e) =>
           setNote(
             e.target.value
@@ -6741,9 +6818,7 @@ function InspectionModal({
       />
 
       <label
-        style={
-          labelStyle
-        }
+        style={labelStyle}
       >
         📸 Fotografie
       </label>
@@ -6752,9 +6827,7 @@ function InspectionModal({
         type="file"
         accept="image/*"
         capture="environment"
-        onChange={
-          handlePhoto
-        }
+        onChange={handlePhoto}
         style={{
           marginBottom: 12,
         }}
@@ -6765,23 +6838,17 @@ function InspectionModal({
           src={photo}
           alt="Náhled"
           style={{
-            width:
-              "100%",
-            maxHeight:
-              220,
-            objectFit:
-              "cover",
-            borderRadius:
-              12,
+            width: "100%",
+            maxHeight: 220,
+            objectFit: "cover",
+            borderRadius: 12,
             marginBottom: 12,
           }}
         />
       )}
 
       <button
-        onPointerDown={
-          save
-        }
+        onPointerDown={save}
         style={
           primaryButtonStyle
         }
