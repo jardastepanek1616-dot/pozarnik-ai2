@@ -1811,34 +1811,17 @@ function App() {
           "more" &&
           !showQrLabels && (
             <MoreScreen
-              maintenance={
-                maintenance
-              }
-              retired={
-                retired
-              }
+              objects={objects}
+              stock={stock}
+              maintenance={maintenance}
+              retired={retired}
+              totalExtinguishers={totalExtinguishers}
+              totalHydrants={totalHydrants}
+              activeFaults={activeFaults}
               onQrLabels={() =>
                 setShowQrLabels(
                   true
                 )
-              }
-              onMaintenanceToObject={
-                returnMaintenanceToObject
-              }
-              onMaintenanceToStock={
-                moveMaintenanceToStock
-              }
-              onMaintenanceRetire={
-                retireMaintenance
-              }
-              onRestoreStock={
-                restoreRetiredToStock
-              }
-              onRestoreObject={
-                restoreRetiredToObject
-              }
-              onDelete={
-                permanentlyDelete
               }
             />
           )}
@@ -2109,9 +2092,6 @@ function Dashboard({
       <h1 style={{ marginTop: 0 }}>Přehled</h1>
 
       <div style={statsGrid}>
-        <Stat icon="🏢" number={objects.length} text="objektů" />
-        <Stat icon="🧯" number={totalExtinguishers} text="hasičáků" />
-        <Stat icon="🚒" number={totalHydrants} text="hydrantů" />
         <Stat icon="📦" number={stock.length} text="na skladě" />
         <Stat icon="🔧" number={maintenance.length} text="na údržbě" />
         <Stat icon="🗄️" number={retired.length} text="vyřazených" />
@@ -4123,6 +4103,23 @@ function StockScreen({
             >
               pouze hasicí přístroje
             </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 8,
+                marginTop: 12,
+              }}
+            >
+              {[["🧯", "Práškové", "PRASKOVY"], ["❄️", "CO₂", "CO2"], ["💧", "Vodní", "VODNI"]].map(([icon, label, type]) => (
+                <div key={type} style={miniStatStyle}>
+                  <div>{icon}</div>
+                  <b>{stock.filter((item) => item.type === type).length}</b>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {stock.map(
@@ -4423,6 +4420,23 @@ function MaintenanceTab({
         >
           přesný počet kusů
         </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: 8,
+            marginTop: 12,
+          }}
+        >
+          {[["🧯", "Práškové", "PRASKOVY"], ["❄️", "CO₂", "CO2"], ["💧", "Vodní", "VODNI"]].map(([icon, label, type]) => (
+            <div key={type} style={miniStatStyle}>
+              <div>{icon}</div>
+              <b>{maintenance.filter((item) => item.type === type).length}</b>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {maintenance.map(
@@ -4708,6 +4722,23 @@ function RetiredTab({
         >
           přesný počet vyřazených kusů
         </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: 8,
+            marginTop: 12,
+          }}
+        >
+          {[["🧯", "Práškové", "PRASKOVY"], ["❄️", "CO₂", "CO2"], ["💧", "Vodní", "VODNI"]].map(([icon, label, type]) => (
+            <div key={type} style={miniStatStyle}>
+              <div>{icon}</div>
+              <b>{retired.filter((item) => item.type === type).length}</b>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {retired.map(
@@ -4826,320 +4857,121 @@ function RetiredTab({
 ========================================================= */
 
 function MoreScreen({
+  objects,
+  stock,
   maintenance,
   retired,
+  totalExtinguishers,
+  totalHydrants,
+  activeFaults,
   onQrLabels,
-  onMaintenanceToObject,
-  onMaintenanceToStock,
-  onMaintenanceRetire,
-  onRestoreStock,
-  onRestoreObject,
-  onDelete,
 }) {
-  const [tab, setTab] =
-    useState(
-      "maintenance"
-    );
+  const [showStatistics, setShowStatistics] = useState(false);
+
+  const allObjectDevices = objects.flatMap((object) => object.devices || []);
+  const allFireExtinguishers = allObjectDevices.filter(
+    (device) => device.type !== "HYDRANT"
+  );
+
+  const countType = (items, type) =>
+    items.filter((item) => item.type === type).length;
+
+  const renderTypeBreakdown = (items) => (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+        gap: 8,
+        marginTop: 10,
+      }}
+    >
+      <div style={{ ...miniStatStyle }}>
+        <div>🧯</div>
+        <b>{countType(items, "PRASKOVY")}</b>
+        <span>Práškové</span>
+      </div>
+      <div style={{ ...miniStatStyle }}>
+        <div>❄️</div>
+        <b>{countType(items, "CO2")}</b>
+        <span>CO₂</span>
+      </div>
+      <div style={{ ...miniStatStyle }}>
+        <div>💧</div>
+        <b>{countType(items, "VODNI")}</b>
+        <span>Vodní</span>
+      </div>
+    </div>
+  );
 
   return (
     <>
-      <h1>
-        ••• Více
-      </h1>
+      <h1>••• Více</h1>
 
       <button
-        onPointerDown={
-          onQrLabels
-        }
+        onPointerDown={onQrLabels}
         style={{
           ...cardStyle,
-          width:
-            "100%",
-          textAlign:
-            "left",
-          cursor:
-            "pointer",
+          width: "100%",
+          textAlign: "left",
+          cursor: "pointer",
         }}
       >
-        <div
-          style={{
-            fontSize: 24,
-          }}
-        >
-          🏷️
-        </div>
-
-        <b>
-          QR štítky hasičáků
-        </b>
-
-        <div
-          style={
-            smallStyle
-          }
-        >
+        <div style={{ fontSize: 24 }}>🏷️</div>
+        <b>QR štítky hasičáků</b>
+        <div style={smallStyle}>
           Zobrazit a vytisknout QR kódy pro hasičáky
         </div>
       </button>
 
-      <div
+      <button
+        onPointerDown={() => setShowStatistics((value) => !value)}
         style={{
-          display:
-            "flex",
-          gap: 8,
-          marginBottom: 14,
+          ...cardStyle,
+          width: "100%",
+          textAlign: "left",
+          cursor: "pointer",
           marginTop: 10,
         }}
       >
-        <FilterButton
-          active={
-            tab ===
-            "maintenance"
-          }
-          onClick={() =>
-            setTab(
-              "maintenance"
-            )
-          }
-        >
-          🔧 Údržba (
-          {
-            maintenance.length
-          }
-          )
-        </FilterButton>
+        <div style={{ fontSize: 24 }}>📊</div>
+        <b>Statistiky</b>
+        <div style={smallStyle}>
+          Objekty, hasičáky, hydranty, závady a rozdělení skladu, údržby a vyřazených.
+        </div>
+      </button>
 
-        <FilterButton
-          active={
-            tab ===
-            "retired"
-          }
-          onClick={() =>
-            setTab(
-              "retired"
-            )
-          }
-        >
-          🗄️ Vyřazené (
-          {
-            retired.length
-          }
-          )
-        </FilterButton>
-      </div>
+      {showStatistics && (
+        <div style={{ marginTop: 10 }}>
+          <div style={cardStyle}>
+            <b>🏢 Celková evidence</b>
+            <div style={statsGrid}>
+              <Stat icon="🏢" number={objects.length} text="objektů" />
+              <Stat icon="🧯" number={totalExtinguishers} text="hasičáků" />
+              <Stat icon="🚒" number={totalHydrants} text="hydrantů" />
+              <Stat icon="⚠️" number={activeFaults} text="aktivních závad" />
+            </div>
+          </div>
 
-      {tab ===
-        "maintenance" && (
-        <>
-          {maintenance.map(
-            (item) => (
-              <div
-                key={
-                  item.id
-                }
-                style={
-                  cardStyle
-                }
-              >
-                <b>
-                  🔧{" "}
-                  {
-                    item.id
-                  }
-                </b>
+          <div style={cardStyle}>
+            <b>🧯 Hasičáky podle typu v objektech</b>
+            {renderTypeBreakdown(allFireExtinguishers)}
+          </div>
 
-                <div
-                  style={
-                    smallStyle
-                  }
-                >
-                  {
-                    getTypeName(
-                      item.type
-                    )
-                  }
-                </div>
+          <div style={cardStyle}>
+            <b>📦 Sklad — {stock.length} ks</b>
+            {renderTypeBreakdown(stock)}
+          </div>
 
-                <div
-                  style={{
-                    marginTop: 8,
-                  }}
-                >
-                  Důvod:{" "}
-                  {
-                    item.maintenanceReason ||
-                    "Údržba"
-                  }
-                </div>
+          <div style={cardStyle}>
+            <b>🔧 Údržba — {maintenance.length} ks</b>
+            {renderTypeBreakdown(maintenance)}
+          </div>
 
-                <div
-                  style={
-                    smallStyle
-                  }
-                >
-                  Od:{" "}
-                  {formatDate(
-                    item.maintenanceSince
-                  )}
-                </div>
-
-                <button
-                  onPointerDown={() =>
-                    onMaintenanceToObject(
-                      item
-                    )
-                  }
-                  style={{
-                    ...secondaryButtonStyle,
-                    marginTop: 10,
-                  }}
-                >
-                  🏢 Vrátit do objektu
-                </button>
-
-                <button
-                  onPointerDown={() =>
-                    onMaintenanceToStock(
-                      item
-                    )
-                  }
-                  style={{
-                    ...secondaryButtonStyle,
-                    marginTop: 8,
-                  }}
-                >
-                  📦 Dát na sklad
-                </button>
-
-                <button
-                  onPointerDown={() =>
-                    onMaintenanceRetire(
-                      item
-                    )
-                  }
-                  style={{
-                    ...secondaryButtonStyle,
-                    marginTop: 8,
-                    color:
-                      "#b91c1c",
-                  }}
-                >
-                  🗄️ Vyřadit
-                </button>
-              </div>
-            )
-          )}
-
-          {maintenance.length ===
-            0 && (
-            <EmptyBox
-              icon="🔧"
-              title="Nic není na údržbě"
-              text="Aktuálně není žádný hasicí přístroj na údržbě."
-            />
-          )}
-        </>
-      )}
-
-      {tab ===
-        "retired" && (
-        <>
-          {retired.map(
-            (item) => (
-              <div
-                key={
-                  item.id
-                }
-                style={
-                  cardStyle
-                }
-              >
-                <b>
-                  🗄️{" "}
-                  {
-                    item.id
-                  }
-                </b>
-
-                <div
-                  style={
-                    smallStyle
-                  }
-                >
-                  {
-                    getTypeName(
-                      item.type
-                    )
-                  }
-                </div>
-
-                <div
-                  style={
-                    smallStyle
-                  }
-                >
-                  Vyřazeno:{" "}
-                  {formatDate(
-                    item.retiredAt
-                  )}
-                </div>
-
-                <button
-                  onPointerDown={() =>
-                    onRestoreObject(
-                      item
-                    )
-                  }
-                  style={{
-                    ...secondaryButtonStyle,
-                    marginTop: 10,
-                  }}
-                >
-                  ♻️ Obnovit do objektu
-                </button>
-
-                <button
-                  onPointerDown={() =>
-                    onRestoreStock(
-                      item
-                    )
-                  }
-                  style={{
-                    ...secondaryButtonStyle,
-                    marginTop: 8,
-                  }}
-                >
-                  📦 Vrátit na sklad
-                </button>
-
-                <button
-                  onPointerDown={() =>
-                    onDelete(
-                      item
-                    )
-                  }
-                  style={{
-                    ...secondaryButtonStyle,
-                    marginTop: 8,
-                    color:
-                      "#b91c1c",
-                  }}
-                >
-                  🗑️ Trvale smazat
-                </button>
-              </div>
-            )
-          )}
-
-          {retired.length ===
-            0 && (
-            <EmptyBox
-              icon="🗄️"
-              title="Nic není vyřazené"
-              text="Historie vyřazených zařízení je prázdná."
-            />
-          )}
-        </>
+          <div style={cardStyle}>
+            <b>🗄️ Vyřazené — {retired.length} ks</b>
+            {renderTypeBreakdown(retired)}
+          </div>
+        </div>
       )}
     </>
   );
@@ -6727,6 +6559,17 @@ function DeviceRow({
 /* =========================================================
    POMOCNÉ KOMPONENTY
 ========================================================= */
+
+const miniStatStyle = {
+  background: "#f9fafb",
+  border: "1px solid #e5e7eb",
+  borderRadius: 12,
+  padding: 10,
+  textAlign: "center",
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+};
 
 function Stat({
   icon,
