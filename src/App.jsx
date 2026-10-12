@@ -6429,105 +6429,110 @@ function DeviceRow({
   device,
   onClick,
 }) {
-  const status =
-    getDeviceStatus(
-      device
-    );
+  const status = getDeviceStatus(device);
+
+  const deviceImage =
+    device.type === "VODNI" ? hasicakVodni :
+    device.type === "PRASKOVY" ? hasicakPraskovy :
+    device.type === "CO2" ? hasicakCo2 :
+    device.type === "HYDRANT" ? hydrantImage :
+    null;
+
+  const imageBackground =
+    device.type === "VODNI" ? "#eaf5ff" :
+    device.type === "PRASKOVY" ? "#fff0f0" :
+    device.type === "CO2" ? "#f1f5f9" :
+    "#eef5ff";
 
   return (
     <div
       style={{
-        display:
-          "flex",
-        alignItems:
-          "center",
-        gap: 10,
-        padding:
-          "14px 0",
-        borderBottom:
-          "1px solid #eee",
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        padding: "16px 0",
+        borderBottom: "1px solid #e5e7eb",
       }}
     >
       <div
         style={{
+          width: 76,
+          height: 86,
+          flex: "0 0 76px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 4,
+          boxSizing: "border-box",
+          borderRadius: 14,
+          background: imageBackground,
+          overflow: "hidden",
+        }}
+        aria-hidden="true"
+      >
+        {deviceImage ? (
+          <img
+            src={deviceImage}
+            alt=""
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
+          />
+        ) : (
+          <span style={{ fontSize: 38 }}>{getDeviceIcon(device)}</span>
+        )}
+      </div>
+
+      <div
+        style={{
           flex: 1,
           minWidth: 0,
-          pointerEvents:
-            "none",
+          pointerEvents: "none",
         }}
       >
-        <div>
-          <b>
-            {
-              getDeviceIcon(
-                device
-              )
-            }{" "}
-            {
-              device.id
-            }
-          </b>
+        <div style={{ fontSize: 16, lineHeight: 1.3, overflowWrap: "anywhere" }}>
+          <b>{device.id}</b>
         </div>
 
-        <div
-          style={
-            smallStyle
-          }
-        >
-          {
-            getTypeName(
-              device.type
-            )
-          }
+        <div style={{ ...smallStyle, marginTop: 5 }}>
+          {getTypeName(device.type)}
           {" • "}
-          {
-            device.location ||
-            "Bez umístění"
-          }
+          {device.location || "Bez umístění"}
         </div>
 
         <div
           style={{
-            marginTop: 5,
-            fontWeight: 700,
+            marginTop: 7,
+            fontWeight: 750,
+            lineHeight: 1.25,
             color:
-              status ===
-              "PO EXPIRACI"
-                ? "#dc2626"
-                : status ===
-                  "MUSÍ NA ÚDRŽBU"
-                ? "#d97706"
-                : "#15803d",
+              status === "PO EXPIRACI" ? "#dc2626" :
+              status === "MUSÍ NA ÚDRŽBU" ? "#d97706" :
+              "#15803d",
           }}
         >
-          {
-            getStatusIcon(
-              status
-            )
-          }{" "}
-          {status}
+          {getStatusIcon(status)} {status}
         </div>
       </div>
 
       <button
-        onPointerDown={(
-          event
-        ) => {
+        onPointerDown={(event) => {
           event.stopPropagation();
           onClick();
         }}
         style={{
           flexShrink: 0,
-          border:
-            "1px solid #d1d5db",
-          background:
-            "#f9fafb",
-          borderRadius: 10,
-          padding:
-            "10px 11px",
-          fontWeight: 700,
-          color:
-            "#111827",
+          border: "1px solid #d1d5db",
+          background: "#f9fafb",
+          borderRadius: 12,
+          padding: "11px 12px",
+          fontWeight: 750,
+          color: "#111827",
+          minHeight: 46,
+          whiteSpace: "nowrap",
         }}
       >
         DETAIL →
@@ -6795,37 +6800,42 @@ function EmptyBox({
    POMOCNÉ FUNKCE
 ========================================================= */
 
-function getDeviceIcon(device) {
-  const imageByType = {
-    VODNI: hasicakVodni,
-    PRASKOVY: hasicakPraskovy,
-    CO2: hasicakCo2,
-    HYDRANT: hydrantImage,
-  };
+function getDeviceIcon(
+  device
+) {
+  if (!device) {
+    return "🧯";
+  }
 
-  const image = imageByType[device?.type] || hasicakVodni;
-  const alt = device?.type === "HYDRANT"
-    ? "Hydrant"
-    : device?.type === "CO2"
-      ? "CO₂ hasicí přístroj"
-      : device?.type === "PRASKOVY"
-        ? "Práškový hasicí přístroj"
-        : "Vodní hasicí přístroj";
+  if (
+    device.type ===
+    "VODNI"
+  ) {
+    return "💧";
+  }
 
-  return (
-    <img
-      src={image}
-      alt={alt}
-      aria-hidden="true"
-      style={{
-        width: 34,
-        height: 42,
-        objectFit: "contain",
-        verticalAlign: "middle",
-        display: "inline-block",
-      }}
-    />
-  );
+  if (
+    device.type ===
+    "PRASKOVY"
+  ) {
+    return "🧯";
+  }
+
+  if (
+    device.type ===
+    "CO2"
+  ) {
+    return "❄️";
+  }
+
+  if (
+    device.type ===
+    "HYDRANT"
+  ) {
+    return "🚒";
+  }
+
+  return "🧯";
 }
 
 function getTypeName(
