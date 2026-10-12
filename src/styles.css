@@ -231,6 +231,37 @@
   }
 }
 
+/* === Bezpečně kompaktnější obsah na mobilu === */
+
+@media screen and (max-width: 767px) {
+  /* Zmenšení běžného obsahu, ne celé aplikace */
+  .pozarnik-app .pozarnik-main {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Méně prostoru uvnitř karet */
+  .pozarnik-app main [style*="box-shadow"] {
+    padding: 12px !important;
+  }
+
+  /* Kompaktnější nadpisy */
+  .pozarnik-app .pozarnik-main h1 {
+    font-size: 23px !important;
+  }
+
+  .pozarnik-app .pozarnik-main h2 {
+    font-size: 18px !important;
+  }
+
+  /* Menší mezery v mřížkách */
+  .pozarnik-app main [style*="display: grid"] {
+    gap: 8px !important;
+  }
+
+  /* Navigaci a QR skener záměrně neměníme */
+}
+
 
 
 
