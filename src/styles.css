@@ -1,279 +1,73 @@
-/* Požárník AI — jednotný profesionální vzhled */
-:root {
-  color-scheme: light;
-  --pa-navy: #14243b;
-  --pa-navy-light: #203753;
-  --pa-red: #df252b;
-  --pa-red-dark: #bd1f25;
-  --pa-page: #f3f6fb;
-  --pa-surface: #ffffff;
-  --pa-text: #172033;
-  --pa-muted: #687386;
-  --pa-line: #e2e7ef;
-  --pa-green: #168548;
-  --pa-shadow: 0 7px 24px rgba(20, 36, 59, .07);
-}
 
-html { min-height: 100%; background: var(--pa-page); }
-body {
-  margin: 0;
-  background: var(--pa-page);
-  color: var(--pa-text);
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-button, input, select, textarea { font: inherit; }
-button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 3px solid rgba(223, 37, 43, .24);
-  outline-offset: 2px;
-}
+/* === Požárník AI – kompaktnější vzhled pouze na mobilu === */
 
-.pozarnik-app {
-  --fire-red: var(--pa-red);
-  min-height: 100vh !important;
-  background: var(--pa-page) !important;
-  color: var(--pa-text) !important;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
-  padding-bottom: max(88px, env(safe-area-inset-bottom)) !important;
-}
-.pozarnik-app * { box-sizing: border-box; }
-.pozarnik-app h1 {
-  color: var(--pa-navy) !important;
-  font-size: clamp(25px, 3vw, 32px) !important;
-  line-height: 1.18 !important;
-  letter-spacing: -.55px;
-  font-weight: 800;
-}
-.pozarnik-app h2 { color: var(--pa-navy) !important; line-height: 1.25; letter-spacing: -.25px; }
-.pozarnik-app h3 { color: var(--pa-navy) !important; line-height: 1.3; }
-.pozarnik-app p { line-height: 1.5; }
-.pozarnik-app button {
-  min-height: 40px;
-  border-radius: 12px !important;
-  font-weight: 700;
-  transition: background-color .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
-}
-.pozarnik-app button:active { transform: translateY(1px); }
-.pozarnik-app button:hover { filter: brightness(.98); }
-.pozarnik-app input, .pozarnik-app select, .pozarnik-app textarea {
-  max-width: 100%;
-  border: 1px solid #ccd5e2 !important;
-  border-radius: 11px !important;
-  background: #fff !important;
-  color: var(--pa-text) !important;
-  min-height: 42px;
-  box-shadow: none;
-}
-.pozarnik-app input:focus, .pozarnik-app select:focus, .pozarnik-app textarea:focus {
-  border-color: var(--pa-red) !important;
-  outline: 0;
-  box-shadow: 0 0 0 3px rgba(223, 37, 43, .1) !important;
-}
-.pozarnik-app label { color: #354156; }
-.pozarnik-app small { line-height: 1.4; }
+@media (max-width: 767px) {
 
-/* Header */
-.pozarnik-app .pozarnik-header {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 40 !important;
-  background: #fff !important;
-  color: var(--pa-navy) !important;
-  border: 0 !important;
-  border-bottom: 1px solid var(--pa-line) !important;
-  padding: 15px 20px !important;
-  box-shadow: 0 4px 18px rgba(20, 36, 59, .045) !important;
-}
-.pozarnik-app .pozarnik-header > div { max-width: 1440px; margin: 0 auto; }
-.pozarnik-app .pozarnik-header b { letter-spacing: -.35px; }
-.pozarnik-app .pozarnik-header b span { color: var(--pa-red) !important; }
-.pozarnik-app .pozarnik-header button {
-  background: var(--pa-red) !important;
-  color: #fff !important;
-  border: 1px solid var(--pa-red) !important;
-  box-shadow: 0 4px 12px rgba(223, 37, 43, .16);
-}
-.pozarnik-app .pozarnik-header button:hover { background: var(--pa-red-dark) !important; }
-
-/* Main work area and cards that currently use inline styles */
-.pozarnik-app .pozarnik-main {
-  width: 100% !important;
-  max-width: 1440px !important;
-  margin: 0 auto !important;
-  padding: 26px 26px 36px !important;
-}
-.pozarnik-app main [style*="box-shadow"] {
-  border: 1px solid var(--pa-line) !important;
-  border-radius: 19px !important;
-  box-shadow: var(--pa-shadow) !important;
-}
-.pozarnik-app main [style*="background: white"],
-.pozarnik-app main [style*="background: \"white\""] {
-  color: var(--pa-text);
-}
-.pozarnik-app main [style*="background: #f9fafb"],
-.pozarnik-app main [style*="background: \"#f9fafb\""] {
-  background: #f8fafd !important;
-  border-color: var(--pa-line) !important;
-}
-.pozarnik-app main [style*="border: 1px solid #e5e7eb"] {
-  border-color: var(--pa-line) !important;
-}
-.pozarnik-app main [style*="borderRadius: 16"],
-.pozarnik-app main [style*="border-radius: 16px"] { border-radius: 19px !important; }
-.pozarnik-app main [style*="color: #6b7280"],
-.pozarnik-app main [style*="color: \"#6b7280\""] { color: var(--pa-muted) !important; }
-.pozarnik-app main [style*="color: #111827"] { color: var(--pa-text) !important; }
-.pozarnik-app main img { max-width: 100%; }
-.pozarnik-app main table { width: 100%; border-collapse: separate; border-spacing: 0; }
-.pozarnik-app main th { color: #536176; font-size: 12px; font-weight: 800; text-align: left; }
-.pozarnik-app main td, .pozarnik-app main th { padding: 10px 12px; border-bottom: 1px solid #edf0f5; }
-.pozarnik-app main tr:last-child td { border-bottom: 0; }
-
-/* Navigation: bottom bar on mobile, fixed sidebar on desktop */
-.pozarnik-app .pozarnik-nav {
-  position: fixed !important;
-  left: 0 !important; right: 0 !important; bottom: 0 !important; top: auto !important;
-  z-index: 60 !important;
-  width: 100% !important; height: auto !important; min-height: 72px;
-  display: flex !important; flex-direction: row !important;
-  justify-content: space-around !important; align-items: stretch !important;
-  gap: 3px !important;
-  padding: 7px 7px calc(7px + env(safe-area-inset-bottom)) !important;
-  background: var(--pa-navy) !important;
-  border: 0 !important; border-top: 1px solid rgba(255,255,255,.08) !important;
-  box-shadow: 0 -8px 24px rgba(20,36,59,.14) !important;
-}
-.pozarnik-app .pozarnik-nav button {
-  flex: 1 1 0 !important; min-width: 0 !important; width: auto !important;
-  min-height: 54px !important; margin: 0 !important;
-  display: flex !important; flex-direction: column !important;
-  align-items: center !important; justify-content: center !important;
-  gap: 4px !important; padding: 7px 2px !important;
-  border: 1px solid transparent !important; border-radius: 12px !important;
-  background: transparent !important; color: #b8c5d8 !important;
-  box-shadow: none !important; font-size: 11px !important;
-}
-.pozarnik-app .pozarnik-nav button[style*="#dc2626"],
-.pozarnik-app .pozarnik-nav button[style*="rgb(220, 38, 38)"] {
-  background: var(--pa-red) !important; color: #fff !important;
-  box-shadow: 0 4px 12px rgba(223,37,43,.24) !important;
-}
-.pozarnik-app .pozarnik-nav button span { display: flex; align-items: center; justify-content: center; font-size: 20px !important; line-height: 1; }
-.pozarnik-app .pozarnik-nav button small { font-size: 10px !important; line-height: 1.2; font-weight: 750 !important; }
-
-/* Modals */
-.pozarnik-app [style*="rgba(0,0,0,.5)"],
-.pozarnik-app [style*="rgba(0, 0, 0, 0.5)"] {
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-}
-.pozarnik-app [style*="borderRadius: \"20px 20px 0 0\""] {
-  border-radius: 22px 22px 0 0 !important;
-  box-shadow: 0 -12px 36px rgba(20,36,59,.18) !important;
-}
-
-@media (min-width: 960px) {
-  .pozarnik-app { padding-left: 250px !important; padding-bottom: 0 !important; }
+  /* Spodní navigace */
   .pozarnik-app .pozarnik-nav {
-    top: 0 !important; bottom: 0 !important; left: 0 !important; right: auto !important;
-    width: 250px !important; height: 100vh !important; min-height: 100vh;
-    flex-direction: column !important; justify-content: flex-start !important; align-items: stretch !important;
-    gap: 8px !important; padding: 112px 14px 22px !important;
-    border: 0 !important; border-right: 1px solid rgba(255,255,255,.07) !important;
-    box-shadow: 5px 0 24px rgba(20,36,59,.08) !important;
+    min-height: 62px !important;
+    padding: 5px 6px calc(5px + env(safe-area-inset-bottom)) !important;
+    gap: 2px !important;
   }
+
   .pozarnik-app .pozarnik-nav button {
-    flex: 0 0 auto !important; width: 100% !important; min-height: 50px !important;
-    flex-direction: row !important; justify-content: flex-start !important;
-    gap: 13px !important; padding: 12px 15px !important; font-size: 14px !important;
+    min-height: 48px !important;
+    padding: 3px 1px !important;
+    gap: 2px !important;
+    border-radius: 10px !important;
   }
-  .pozarnik-app .pozarnik-nav button span { width: 25px; }
-  .pozarnik-app .pozarnik-nav button small { font-size: 14px !important; }
-  .pozarnik-app .pozarnik-header { padding: 18px 30px !important; }
-  .pozarnik-app .pozarnik-main { padding: 30px 34px 44px !important; }
-  .pozarnik-app main [style*="display: grid"] { gap: 14px !important; }
-}
 
-@media (max-width: 620px) {
-  .pozarnik-app .pozarnik-header { padding: 12px 13px !important; }
-  .pozarnik-app .pozarnik-header b { font-size: 18px !important; }
-  .pozarnik-app .pozarnik-header b span svg { width: 25px; height: 28px; }
-  .pozarnik-app .pozarnik-header > div { gap: 8px !important; }
-  .pozarnik-app .pozarnik-header button { min-height: 40px; padding: 9px 10px !important; font-size: 12px !important; }
-  .pozarnik-app .pozarnik-main { padding: 19px 13px calc(100px + env(safe-area-inset-bottom)) !important; }
-  .pozarnik-app h1 { font-size: 25px !important; }
-  .pozarnik-app h2 { font-size: 20px !important; }
-  .pozarnik-app main [style*="box-shadow"] { border-radius: 16px !important; }
-  .pozarnik-app .pozarnik-nav { min-height: 68px; }
-  .pozarnik-app .pozarnik-nav button { min-height: 50px !important; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pozarnik-app *, .pozarnik-app *::before, .pozarnik-app *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
-}
-
-
-/* Vlastní 3D navigační ikony: průhledné pozadí, bez rámečků.
-   Jednotná velikost napříč mobilním spodním a desktopovým bočním menu. */
-.pozarnik-app .pozarnik-nav .pa-nav-icon {
-  display: block;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
-  object-fit: contain;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0;
-}
-.pozarnik-app .pa-qr-header-icon {
-  display: block;
-  width: 30px;
-  height: 30px;
-  flex: 0 0 30px;
-  object-fit: contain;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-.pozarnik-app .pozarnik-nav button {
-  min-width: 0;
-}
-@media (max-width: 1049px) {
-  .pozarnik-app .pozarnik-nav {
-    align-items: stretch;
-    overflow-x: auto;
-  }
-  .pozarnik-app .pozarnik-nav button {
-    flex: 1 1 0;
-    min-width: 0;
-    gap: 2px;
-    padding: 4px 2px !important;
-  }
+  /* Nové 3D ikonky – bez rámečků a pozadí */
   .pozarnik-app .pozarnik-nav .pa-nav-icon {
-    width: 38px;
-    height: 38px;
-    flex-basis: 38px;
+    width: 29px !important;
+    height: 29px !important;
+    flex-basis: 29px !important;
+    object-fit: contain !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
+
   .pozarnik-app .pozarnik-nav button small {
-    font-size: 10px;
-    line-height: 1.2;
-    white-space: nowrap;
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
   }
-}
-@media (min-width: 1050px) {
-  .pozarnik-app .pozarnik-nav .pa-nav-icon {
-    width: 44px;
-    height: 44px;
-    flex-basis: 44px;
+
+  /* Kompaktnější obsah */
+  .pozarnik-app .pozarnik-main {
+    padding: 16px 12px calc(82px + env(safe-area-inset-bottom)) !important;
   }
-  .pozarnik-app .pozarnik-nav button {
-    min-height: 58px;
+
+  .pozarnik-app h1 {
+    font-size: 23px !important;
+    margin-top: 4px !important;
+    margin-bottom: 12px !important;
   }
+
+  .pozarnik-app h2 {
+    font-size: 18px !important;
+  }
+
+  /* Menší mezery v kartách a mřížkách */
+  .pozarnik-app main [style*="display: grid"] {
+    gap: 10px !important;
+  }
+
+  /* Horní tlačítko QR */
+  .pozarnik-app .pozarnik-header button {
+    min-height: 38px !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    border-radius: 11px !important;
+  }
+
+  .pozarnik-app .pa-qr-header-icon {
+    width: 26px !important;
+    height: 26px !important;
+    flex-basis: 26px !important;
+  }
+
 }
