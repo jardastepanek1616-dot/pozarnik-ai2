@@ -12,6 +12,15 @@ import hasicakPraskovy from "./assets/hasicak-praskovy.png";
 import hasicakVodni from "./assets/hasicak-vodni.png";
 import hydrantImage from "./assets/hydrant.png";
 
+// Vlastní 3D navigační ikony Požárník AI (průhledné PNG)
+import navPrehled from "./assets/nav-icons/prehled.png";
+import navObjekty from "./assets/nav-icons/objekty.png";
+import navSklad from "./assets/nav-icons/sklad.png";
+import navKontroly from "./assets/nav-icons/kontroly.png";
+import navZpravy from "./assets/nav-icons/zpravy.png";
+import navVice from "./assets/nav-icons/vice.png";
+import navQr from "./assets/nav-icons/qr-skener.png";
+
 import {
   QRCodeSVG,
 } from "qrcode.react";
@@ -92,12 +101,12 @@ function getIdFromQrValue(value) {
 ========================================================= */
 
 const menu = [
-  ["dashboard", "layout-dashboard", "Přehled"],
-  ["objects", "building-2", "Objekty"],
-  ["stock", "package", "Sklad"],
-  ["reports", "file-text", "Zprávy"],
-  ["controls", "calendar-check", "Kontroly"],
-  ["more", "ellipsis", "Více"],
+  ["dashboard", navPrehled, "Přehled"],
+  ["objects", navObjekty, "Objekty"],
+  ["stock", navSklad, "Sklad"],
+  ["reports", navZpravy, "Zprávy"],
+  ["controls", navKontroly, "Kontroly"],
+  ["more", navVice, "Více"],
 ];
 
 const iconPaths = {
@@ -1601,7 +1610,7 @@ function App() {
               qrScanButtonStyle
             }
           >
-            📷
+            <img className="pa-qr-header-icon" src={navQr} alt="" aria-hidden="true" />
             <span>
               Skenovat QR
             </span>
@@ -1890,13 +1899,13 @@ function App() {
                     : "#aab8cb",
               }}
             >
-              <span
-                style={{
-                  fontSize: 20,
-                }}
-              >
-                <UiIcon name={icon} size={22} />
-              </span>
+              <img
+                className="pa-nav-icon"
+                src={icon}
+                alt=""
+                aria-hidden="true"
+                draggable="false"
+              />
 
               <small>
                 {name}
