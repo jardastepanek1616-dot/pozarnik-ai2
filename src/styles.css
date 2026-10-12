@@ -231,18 +231,6 @@
   }
 }
 
-/* =========================================
-   POŽÁRNÍK AI – CELÁ APLIKACE NA 80 %
-   Pouze mobil, desktop beze změny
-========================================= */
-
-@media screen and (max-width: 767px) {
-  .pozarnik-app {
-    zoom: 0.8 !important;
-    width: 125% !important;
-    max-width: none !important;
-  }
-}
 
 
 
