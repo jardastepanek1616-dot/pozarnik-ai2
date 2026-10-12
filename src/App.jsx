@@ -6438,12 +6438,6 @@ function DeviceRow({
     device.type === "HYDRANT" ? hydrantImage :
     null;
 
-  const imageBackground =
-    device.type === "VODNI" ? "#eaf5ff" :
-    device.type === "PRASKOVY" ? "#fff0f0" :
-    device.type === "CO2" ? "#f1f5f9" :
-    "#eef5ff";
-
   return (
     <div
       style={{
@@ -6456,17 +6450,16 @@ function DeviceRow({
     >
       <div
         style={{
-          width: 76,
-          height: 86,
-          flex: "0 0 76px",
+          width: 68,
+          height: 76,
+          flex: "0 0 68px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: 4,
+          padding: 0,
           boxSizing: "border-box",
-          borderRadius: 14,
-          background: imageBackground,
-          overflow: "hidden",
+          background: "transparent",
+          overflow: "visible",
         }}
         aria-hidden="true"
       >
@@ -6479,6 +6472,7 @@ function DeviceRow({
               width: "100%",
               height: "100%",
               objectFit: "contain",
+              background: "transparent",
             }}
           />
         ) : (
