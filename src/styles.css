@@ -71,3 +71,79 @@
   }
 
 }
+
+
+/* === Požárník AI – kompaktnější vzhled pouze na mobilu === */
+
+@media (max-width: 767px) {
+
+  /* Spodní navigace */
+  .pozarnik-app .pozarnik-nav {
+    min-height: 62px !important;
+    padding: 5px 6px calc(5px + env(safe-area-inset-bottom)) !important;
+    gap: 2px !important;
+  }
+
+  .pozarnik-app .pozarnik-nav button {
+    min-height: 48px !important;
+    padding: 3px 1px !important;
+    gap: 2px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Nové 3D ikonky – bez rámečků a pozadí */
+  .pozarnik-app .pozarnik-nav .pa-nav-icon {
+    width: 29px !important;
+    height: 29px !important;
+    flex-basis: 29px !important;
+    object-fit: contain !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .pozarnik-app .pozarnik-nav button small {
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Kompaktnější obsah */
+  .pozarnik-app .pozarnik-main {
+    padding: 16px 12px calc(82px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .pozarnik-app h1 {
+    font-size: 23px !important;
+    margin-top: 4px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .pozarnik-app h2 {
+    font-size: 18px !important;
+  }
+
+  /* Menší mezery v kartách a mřížkách */
+  .pozarnik-app main [style*="display: grid"] {
+    gap: 10px !important;
+  }
+
+  /* Horní tlačítko QR */
+  .pozarnik-app .pozarnik-header button {
+    min-height: 38px !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    border-radius: 11px !important;
+  }
+
+  .pozarnik-app .pa-qr-header-icon {
+    width: 26px !important;
+    height: 26px !important;
+    flex-basis: 26px !important;
+  }
+
+}
+
+
