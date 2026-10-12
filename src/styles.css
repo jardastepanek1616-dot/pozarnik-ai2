@@ -146,4 +146,39 @@
 
 }
 
+/* === Objekty: kompaktnější řádky zařízení na mobilu === */
+
+@media (max-width: 767px) {
+  /* Menší mezery v řádku hasicího přístroje */
+  .pozarnik-app main div:has(> div[style*="flex: 0 0 68px"]) {
+    gap: 10px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+
+  /* Úspornější informace o zařízení */
+  .pozarnik-app main div:has(> div[style*="flex: 0 0 68px"]) > div:nth-child(2) {
+    min-width: 0 !important;
+  }
+
+  .pozarnik-app main div:has(> div[style*="flex: 0 0 68px"]) > div:nth-child(2) > div:first-child {
+    font-size: 14px !important;
+  }
+
+  /* Menší tlačítko DETAIL */
+  .pozarnik-app main div:has(> div[style*="flex: 0 0 68px"]) > button {
+    min-height: 38px !important;
+    padding: 8px !important;
+    font-size: 11px !important;
+    border-radius: 9px !important;
+  }
+
+  /* Mírně kompaktnější karty */
+  .pozarnik-app .card {
+    padding: 12px !important;
+    margin: 8px 0 !important;
+  }
+}
+
+
 
