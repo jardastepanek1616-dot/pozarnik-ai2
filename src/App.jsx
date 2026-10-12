@@ -2541,126 +2541,73 @@ function ObjectDetail({
         + Přidat zařízení
       </button>
 
-      <div
-        style={{
-          marginBottom:
-            24,
-        }}
-      >
-        <h2
-          style={{
-            margin: 0,
-            fontSize: 20,
-          }}
-        >
-          🧯 Hasicí přístroje
-        </h2>
-
-        <div
-          style={
-            smallStyle
-          }
-        >
-          {
-            extinguishers.length
-          }{" "}
-          celkem
-        </div>
-
+      {extinguishers.length > 0 && (
         <div
           style={{
-            ...cardStyle,
-            marginTop: 8,
+            marginBottom: 24,
           }}
         >
-          {extinguishers.length ===
-          0 ? (
-            <div
-              style={
-                mutedStyle
-              }
-            >
-              Žádné hasičáky.
-            </div>
-          ) : (
-            extinguishers.map(
-              (device) => (
-                <DeviceRow
-                  key={
-                    device.id
-                  }
-                  device={
-                    device
-                  }
-                  onClick={() =>
-                    onOpenDevice(
-                      device.id
-                    )
-                  }
-                />
-              )
-            )
-          )}
-        </div>
-      </div>
+          <h2
+            style={{
+              margin: 0,
+              fontSize: 20,
+            }}
+          >
+            🧯 Hasicí přístroje
+          </h2>
 
-      <div>
-        <h2
-          style={{
-            margin: 0,
-            fontSize: 20,
-          }}
-        >
-          🚒 Hydranty
-        </h2>
+          <div style={smallStyle}>
+            {extinguishers.length} celkem
+          </div>
 
-        <div
-          style={
-            smallStyle
-          }
-        >
-          {
-            hydrants.length
-          }{" "}
-          celkem
+          <div
+            style={{
+              ...cardStyle,
+              marginTop: 8,
+            }}
+          >
+            {extinguishers.map((device) => (
+              <DeviceRow
+                key={device.id}
+                device={device}
+                onClick={() => onOpenDevice(device.id)}
+              />
+            ))}
+          </div>
         </div>
+      )}
 
-        <div
-          style={{
-            ...cardStyle,
-            marginTop: 8,
-          }}
-        >
-          {hydrants.length ===
-          0 ? (
-            <div
-              style={
-                mutedStyle
-              }
-            >
-              Žádné hydranty.
-            </div>
-          ) : (
-            hydrants.map(
-              (device) => (
-                <DeviceRow
-                  key={
-                    device.id
-                  }
-                  device={
-                    device
-                  }
-                  onClick={() =>
-                    onOpenDevice(
-                      device.id
-                    )
-                  }
-                />
-              )
-            )
-          )}
+      {hydrants.length > 0 && (
+        <div>
+          <h2
+            style={{
+              margin: 0,
+              fontSize: 20,
+            }}
+          >
+            🚒 Hydranty
+          </h2>
+
+          <div style={smallStyle}>
+            {hydrants.length} celkem
+          </div>
+
+          <div
+            style={{
+              ...cardStyle,
+              marginTop: 8,
+            }}
+          >
+            {hydrants.map((device) => (
+              <DeviceRow
+                key={device.id}
+                device={device}
+                onClick={() => onOpenDevice(device.id)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
