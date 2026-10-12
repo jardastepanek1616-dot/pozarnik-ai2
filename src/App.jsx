@@ -5,6 +5,8 @@ import React, {
   useState,
 } from "react";
 
+import "./styles.css";
+
 import hasicakCo2 from "./assets/hasicak-co2.png";
 import hasicakPraskovy from "./assets/hasicak-praskovy.png";
 import hasicakVodni from "./assets/hasicak-vodni.png";
@@ -1552,134 +1554,7 @@ function App() {
         .pozarnik-app .pozarnik-nav small { font-size: 14px; font-weight: 700; }
         .pozarnik-app main { max-width: 1240px; padding: 28px 30px; }
         .pozarnik-app header { padding: 19px 30px; }
-      }
-
-        /* POŽÁRNÍK AI – sjednocený vzhled aplikace */
-        .pozarnik-app {
-          --pz-red: #dc2626;
-          --pz-red-dark: #b91c1c;
-          --pz-navy: #14243c;
-          --pz-ink: #172033;
-          --pz-muted: #64748b;
-          --pz-line: #e2e8f0;
-          --pz-surface: #ffffff;
-          --pz-page: #f3f6fb;
-          background: var(--pz-page) !important;
-          color: var(--pz-ink) !important;
-          font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
-        }
-        .pozarnik-app header.pozarnik-header {
-          background: var(--pz-navy) !important;
-          color: #fff !important;
-          border-bottom: 3px solid var(--pz-red) !important;
-          box-shadow: 0 5px 18px rgba(15, 23, 42, .12) !important;
-        }
-        .pozarnik-app header.pozarnik-header > div { max-width: 1500px; margin: 0 auto; }
-        .pozarnik-app header.pozarnik-header div { color: inherit; }
-        .pozarnik-app header.pozarnik-header span { color: #fff !important; }
-        .pozarnik-app header.pozarnik-header span svg { color: #fff !important; }
-        .pozarnik-app main.pozarnik-main {
-          max-width: 1500px !important;
-          padding: 28px clamp(14px, 2.5vw, 36px) 110px !important;
-        }
-        .pozarnik-app h1 {
-          color: var(--pz-ink) !important;
-          font-size: clamp(25px, 2.4vw, 32px) !important;
-          font-weight: 850 !important;
-          letter-spacing: -.035em !important;
-          margin-bottom: 20px !important;
-        }
-        .pozarnik-app h2, .pozarnik-app h3 {
-          color: var(--pz-ink) !important;
-          font-weight: 800 !important;
-          letter-spacing: -.02em;
-        }
-        .pozarnik-app button {
-          transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
-          cursor: pointer;
-          -webkit-tap-highlight-color: transparent;
-        }
-        .pozarnik-app button:active { transform: scale(.985); }
-        .pozarnik-app button:hover { filter: brightness(.98); }
-        .pozarnik-app main button {
-          border-radius: 12px !important;
-        }
-        .pozarnik-app main button[style*="background: rgb(17, 24, 39)"],
-        .pozarnik-app main button[style*="background: rgb(17,24,39)"] {
-          background: var(--pz-navy) !important;
-        }
-        .pozarnik-app input, .pozarnik-app select, .pozarnik-app textarea {
-          font: inherit !important;
-          color: var(--pz-ink) !important;
-          background: #fff !important;
-          border: 1px solid #cbd5e1 !important;
-          border-radius: 12px !important;
-          box-shadow: 0 1px 2px rgba(15,23,42,.03) !important;
-          outline: none;
-        }
-        .pozarnik-app input:focus, .pozarnik-app select:focus, .pozarnik-app textarea:focus {
-          border-color: var(--pz-red) !important;
-          box-shadow: 0 0 0 3px rgba(220,38,38,.12) !important;
-        }
-        .pozarnik-app main div[style*="box-shadow"],
-        .pozarnik-app main div[style*="boxShadow"] {
-          border-color: var(--pz-line) !important;
-          box-shadow: 0 4px 16px rgba(15,23,42,.045) !important;
-        }
-        .pozarnik-app main div[style*="border-radius: 16"],
-        .pozarnik-app main div[style*="borderRadius: 16"],
-        .pozarnik-app main div[style*="border-radius: 14"],
-        .pozarnik-app main div[style*="borderRadius: 14"] {
-          border-radius: 16px !important;
-        }
-        .pozarnik-app .pozarnik-nav {
-          background: var(--pz-navy) !important;
-          border-color: #263a56 !important;
-          box-shadow: 0 -6px 22px rgba(15,23,42,.10) !important;
-          padding-bottom: max(6px, env(safe-area-inset-bottom)) !important;
-        }
-        .pozarnik-app .pozarnik-nav button {
-          border: 1px solid transparent !important;
-          font-weight: 750 !important;
-          transition: background .15s ease, color .15s ease;
-        }
-        .pozarnik-app .pozarnik-nav button:focus-visible,
-        .pozarnik-app button:focus-visible {
-          outline: 3px solid rgba(220,38,38,.35);
-          outline-offset: 2px;
-        }
-        .pozarnik-app .pozarnik-nav button small { letter-spacing: .01em; }
-        .pozarnik-app img {
-          object-fit: contain;
-        }
-        @media (min-width: 960px) {
-          .pozarnik-app { padding-left: 248px !important; }
-          .pozarnik-app .pozarnik-nav {
-            width: 248px !important;
-            padding: 112px 14px 20px !important;
-          }
-          .pozarnik-app .pozarnik-nav button {
-            border-radius: 12px !important;
-            min-height: 48px;
-          }
-          .pozarnik-app main.pozarnik-main {
-            padding: 30px clamp(24px, 3vw, 48px) !important;
-          }
-        }
-        @media (max-width: 959px) {
-          .pozarnik-app header.pozarnik-header { padding: 13px 15px !important; }
-          .pozarnik-app header.pozarnik-header b { font-size: 19px !important; }
-          .pozarnik-app header.pozarnik-header div div { font-size: 11px !important; }
-          .pozarnik-app main.pozarnik-main { padding: 20px 14px 105px !important; }
-          .pozarnik-app .pozarnik-nav { height: 76px !important; }
-          .pozarnik-app .pozarnik-nav button { min-width: 0 !important; padding: 8px 3px !important; }
-        }
-        @media (max-width: 420px) {
-          .pozarnik-app header.pozarnik-header > div { gap: 8px !important; }
-          .pozarnik-app header.pozarnik-header button { padding: 9px 10px !important; font-size: 12px !important; }
-          .pozarnik-app main.pozarnik-main { padding-left: 11px !important; padding-right: 11px !important; }
-        }
-      `}</style>
+      }`}</style>
       {/* HEADER */}
 
       <header className="pozarnik-header"
