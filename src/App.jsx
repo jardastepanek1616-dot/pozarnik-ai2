@@ -85,13 +85,41 @@ function getIdFromQrValue(value) {
 ========================================================= */
 
 const menu = [
-  ["dashboard", "🏠", "Přehled"],
-  ["objects", "🏢", "Objekty"],
-  ["stock", "📦", "Sklad"],
-  ["reports", "📄", "Zprávy"],
-  ["controls", "📅", "Kontroly"],
-  ["more", "•••", "Více"],
+  ["dashboard", "layout-dashboard", "Přehled"],
+  ["objects", "building-2", "Objekty"],
+  ["stock", "package", "Sklad"],
+  ["reports", "file-text", "Zprávy"],
+  ["controls", "calendar-check", "Kontroly"],
+  ["more", "ellipsis", "Více"],
 ];
+
+const iconPaths = {
+  "layout-dashboard": <><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></>,
+  "building-2": <><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h1m6 0h1M8 10h1m6 0h1M8 14h1m6 0h1"/></>,
+  "package": <><path d="m12 2 9 5-9 5-9-5 9-5ZM3 7v10l9 5 9-5V7M12 12v10"/></>,
+  "file-text": <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></>,
+  "calendar-check": <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18m-13 6 2 2 5-5"/></>,
+  "ellipsis": <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>,
+};
+function MenuIcon({ name, size = 22 }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{iconPaths[name]}</svg>;
+}
+function ExtinguisherLogo() {
+  return <svg width="27" height="32" viewBox="0 0 28 34" fill="none" aria-hidden="true"><path d="M12 6h8v4h-8z" fill="white"/><path d="M15 6V3h7l3 4" stroke="white" strokeWidth="2.3" strokeLinecap="round"/><path d="M13 10h7a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4h-7a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4Z" fill="white"/><rect x="12" y="17" width="9" height="7" rx="1" fill="#dc2626"/><path d="M9 13H5l-2 6" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>;
+}
+
+function UiIcon({ name, size = 22 }) {
+  const paths = {
+    home: <><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></>,
+    building: <><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 7h1m4 0h1M9 11h1m4 0h1M9 15h1m4 0h1M10 21v-3h4v3"/></>,
+    package: <><path d="m3 7 9-4 9 4v10l-9 4-9-4z"/><path d="m3 7 9 5 9-5M12 12v9"/></>,
+    file: <><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h4M9 13h6M9 17h6"/></>,
+    calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18M8 15h3"/></>,
+    more: <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>,
+    extinguisher: <><path d="M10 5h5M12 5V3h5l2 2M10 8h6l2 3v9a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-9zM8 12H6v5M11 8V5M11 14h4M13 12v5"/></>,
+  };
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name] || paths.extinguisher}</svg>;
+}
 
 /* =========================================================
    ZÁVADY
@@ -1511,14 +1539,18 @@ function App() {
   ======================================================= */
 
   return (
-    <div
-      style={
-        pageStyle
-      }
-    >
+    <div className="pozarnik-app" style={pageStyle}>
+      <style>{`@media (min-width: 960px) {
+        .pozarnik-app { padding-left: 230px; }
+        .pozarnik-app .pozarnik-nav { top: 0; bottom: 0; right: auto; width: 230px; height: 100vh; flex-direction: column; justify-content: flex-start; padding: 110px 12px 18px; gap: 7px; background: #14243c; border: 0; box-sizing: border-box; }
+        .pozarnik-app .pozarnik-nav button { width: 100%; flex-direction: row; justify-content: flex-start; gap: 14px; padding: 14px 15px; font-size: 15px; }
+        .pozarnik-app .pozarnik-nav small { font-size: 14px; font-weight: 700; }
+        .pozarnik-app main { max-width: 1240px; padding: 28px 30px; }
+        .pozarnik-app header { padding: 19px 30px; }
+      }`}</style>
       {/* HEADER */}
 
-      <header
+      <header className="pozarnik-header"
         style={
           headerStyle
         }
@@ -1540,7 +1572,7 @@ function App() {
                 fontSize: 21,
               }}
             >
-              🧯 Požárník AI
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 9, color: "#dc2626" }}><UiIcon name="extinguisher" size={29} /> Požárník AI</span>
             </b>
 
             <div
@@ -1572,7 +1604,7 @@ function App() {
 
       {/* MAIN */}
 
-      <main
+      <main className="pozarnik-main"
         style={
           mainStyle
         }
@@ -1829,11 +1861,7 @@ function App() {
 
       {/* SPODNÍ MENU */}
 
-      <nav
-        style={
-          navStyle
-        }
-      >
+      <nav className="pozarnik-nav" style={navStyle}>
         {menu.map(
           ([id, icon, name]) => (
             <button
@@ -1846,13 +1874,13 @@ function App() {
 
                 background:
                   screen === id
-                    ? "#f3f4f6"
+                    ? "#dc2626"
                     : "transparent",
 
                 color:
                   screen === id
-                    ? "#111827"
-                    : "#6b7280",
+                    ? "#ffffff"
+                    : "#aab8cb",
               }}
             >
               <span
@@ -1860,7 +1888,7 @@ function App() {
                   fontSize: 20,
                 }}
               >
-                {icon}
+                <UiIcon name={icon} size={22} />
               </span>
 
               <small>
@@ -6851,11 +6879,28 @@ function getObjectStatus(
    STYLY
 ========================================================= */
 
+const modernLayoutCss = `
+  .pozarnik-app { --fire-red:#dc2626; --navy:#111e32; }
+  .pozarnik-app .brand-mark { display:inline-flex;vertical-align:middle;align-items:center;justify-content:center;background:#dc2626;border-radius:10px;width:40px;height:40px;margin-right:7px; }
+  .pozarnik-app button { cursor:pointer; }
+  .pozarnik-app .pozarnik-header { box-shadow:0 2px 14px rgba(15,23,42,.045); }
+  .pozarnik-app .pozarnik-nav button { transition:background .15s,color .15s; }
+  .pozarnik-app .menu-icon { display:flex;align-items:center;justify-content:center; }
+  @media(min-width:1050px) {
+    .pozarnik-app .pozarnik-nav { position:fixed !important;left:0;top:0;bottom:0;right:auto;width:226px;height:auto !important;box-sizing:border-box;background:#111e32 !important;display:flex !important;flex-direction:column;justify-content:flex-start !important;gap:7px;padding:104px 12px 24px !important;border:0 !important; }
+    .pozarnik-app .pozarnik-nav button { width:100%;min-height:52px;flex-direction:row !important;justify-content:flex-start !important;gap:14px !important;padding:12px 16px !important;font-size:15px; }
+    .pozarnik-app .pozarnik-nav button:not([style*="254, 226, 226"]) { color:#cbd5e1 !important; }
+    .pozarnik-app .pozarnik-nav button small { font-size:14px;font-weight:700; }
+    .pozarnik-app .pozarnik-header { margin-left:226px; }
+    .pozarnik-app .pozarnik-main { margin-left:226px !important;max-width:1250px !important;padding:30px 28px !important; }
+  }
+`;
+
 const pageStyle = {
   minHeight:
     "100vh",
   background:
-    "#f4f6f8",
+    "#f3f6fb",
   color:
     "#111827",
   fontFamily:
@@ -6880,7 +6925,7 @@ const headerStyle = {
 const qrScanButtonStyle = {
   border: 0,
   background:
-    "#111827",
+    "#dc2626",
   color:
     "white",
   borderRadius:
@@ -6915,9 +6960,9 @@ const navStyle = {
   zIndex: 20,
   height: 75,
   background:
-    "rgba(255,255,255,.97)",
+    "#14243c",
   borderTop:
-    "1px solid #ddd",
+    "1px solid #253954",
   display:
     "flex",
   justifyContent:
