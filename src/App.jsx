@@ -5,6 +5,11 @@ import React, {
   useState,
 } from "react";
 
+import hasicakCo2 from "./assets/hasicak-co2.png";
+import hasicakPraskovy from "./assets/hasicak-praskovy.png";
+import hasicakVodni from "./assets/hasicak-vodni.png";
+import hydrantImage from "./assets/hydrant.png";
+
 import {
   QRCodeSVG,
 } from "qrcode.react";
@@ -6790,42 +6795,37 @@ function EmptyBox({
    POMOCNÉ FUNKCE
 ========================================================= */
 
-function getDeviceIcon(
-  device
-) {
-  if (!device) {
-    return "🧯";
-  }
+function getDeviceIcon(device) {
+  const imageByType = {
+    VODNI: hasicakVodni,
+    PRASKOVY: hasicakPraskovy,
+    CO2: hasicakCo2,
+    HYDRANT: hydrantImage,
+  };
 
-  if (
-    device.type ===
-    "VODNI"
-  ) {
-    return "💧";
-  }
+  const image = imageByType[device?.type] || hasicakVodni;
+  const alt = device?.type === "HYDRANT"
+    ? "Hydrant"
+    : device?.type === "CO2"
+      ? "CO₂ hasicí přístroj"
+      : device?.type === "PRASKOVY"
+        ? "Práškový hasicí přístroj"
+        : "Vodní hasicí přístroj";
 
-  if (
-    device.type ===
-    "PRASKOVY"
-  ) {
-    return "🧯";
-  }
-
-  if (
-    device.type ===
-    "CO2"
-  ) {
-    return "❄️";
-  }
-
-  if (
-    device.type ===
-    "HYDRANT"
-  ) {
-    return "🚒";
-  }
-
-  return "🧯";
+  return (
+    <img
+      src={image}
+      alt={alt}
+      aria-hidden="true"
+      style={{
+        width: 34,
+        height: 42,
+        objectFit: "contain",
+        verticalAlign: "middle",
+        display: "inline-block",
+      }}
+    />
+  );
 }
 
 function getTypeName(
