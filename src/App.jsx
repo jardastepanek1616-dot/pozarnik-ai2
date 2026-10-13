@@ -5320,7 +5320,6 @@ function ControlsScreen({
    ZPRÁVY
 ========================================================= */
 
-function 
 function ReportsScreen({ objects }) {
   const reports = [];
 
