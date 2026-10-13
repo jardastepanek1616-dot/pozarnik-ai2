@@ -1,4 +1,5 @@
-// Požárník AI
+
+ // Požárník AI
 // Výpočty termínů zařízení
 
 export const LEGAL_RULES = {
@@ -37,26 +38,34 @@ export function getRule(type) {
 
 export function calculatePeriodicYear(type, lastPeriodicYear) {
   const rule = getRule(type);
-
-  if (!rule || !rule.periodicYears || !lastPeriodicYear) {
-    return null;
-  }
-
-  return Number(lastPeriodicYear) + rule.periodicYears;
-}
-
-export function calculateLifeEnd(type, manufactureYear) {
-  const rule = getRule(type);
+  const year = Number(lastPeriodicYear);
 
   if (
     !rule ||
-    !rule.lifeYears ||
-    !manufactureYear
+    !rule.periodicYears ||
+    !Number.isInteger(year) ||
+    year <= 0
   ) {
     return null;
   }
 
-  return Number(manufactureYear) + rule.lifeYears;
+  return year + rule.periodicYears;
+}
+
+export function calculateLifeEnd(type, manufactureYear) {
+  const rule = getRule(type);
+  const year = Number(manufactureYear);
+
+  if (
+    !rule ||
+    !rule.lifeYears ||
+    !Number.isInteger(year) ||
+    year <= 0
+  ) {
+    return null;
+  }
+
+  return year + rule.lifeYears;
 }
 
 export function getCurrentYear() {
@@ -81,24 +90,36 @@ export function getNextAnnualCheck(lastCheck) {
   );
 }
 
+// Životnost skončila v některém z předchozích let.
 export function isLifeExpired(device) {
-  if (!device?.lifeEndYear) {
+  if (
+    device?.lifeEndYear == null ||
+    device.lifeEndYear === ""
+  ) {
     return false;
   }
 
-  return getCurrentYear() > Number(device.lifeEndYear);
+  return Number(device.lifeEndYear) < getCurrentYear();
 }
 
+// Konec životnosti připadá na aktuální rok.
 export function isLifeEndingThisYear(device) {
-  if (!device?.lifeEndYear) {
+  if (
+    device?.lifeEndYear == null ||
+    device.lifeEndYear === ""
+  ) {
     return false;
   }
 
   return Number(device.lifeEndYear) === getCurrentYear();
 }
 
+// Periodická zkouška je splatná letos nebo už měla být provedena.
 export function isPeriodicDue(device) {
-  if (!device?.nextPeriodicYear) {
+  if (
+    device?.nextPeriodicYear == null ||
+    device.nextPeriodicYear === ""
+  ) {
     return false;
   }
 
@@ -106,7 +127,10 @@ export function isPeriodicDue(device) {
 }
 
 export function isPeriodicDueThisYear(device) {
-  if (!device?.nextPeriodicYear) {
+  if (
+    device?.nextPeriodicYear == null ||
+    device.nextPeriodicYear === ""
+  ) {
     return false;
   }
 
@@ -118,12 +142,19 @@ export function getDeviceStatus(device) {
     return "V POŘÁDKU";
   }
 
+  // Prošlá životnost má přednost před ostatními stavy.
+  if (isLifeExpired(device)) {
+    return "PO EXPIRACI";
+  }
+
+  // Ručně zadaná závada nebo nutná údržba.
   if (device.status === "MUSÍ NA ÚDRŽBU") {
     return "MUSÍ NA ÚDRŽBU";
   }
 
-  if (isLifeExpired(device)) {
-    return "PO EXPIRACI";
+  // Upozorni už v roce konce životnosti.
+  if (isLifeEndingThisYear(device)) {
+    return "MUSÍ NA ÚDRŽBU";
   }
 
   if (isPeriodicDue(device)) {
@@ -147,7 +178,7 @@ export function getStatusIcon(status) {
 }
 
 export function formatYear(year) {
-  if (!year) {
+  if (year == null || year === "") {
     return "—";
   }
 
