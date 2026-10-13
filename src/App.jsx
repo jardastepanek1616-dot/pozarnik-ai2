@@ -5320,127 +5320,88 @@ function ControlsScreen({
    ZPRÁVY
 ========================================================= */
 
-function ReportsScreen({
-  objects,
-}) {
+function 
+function ReportsScreen({ objects }) {
   const reports = [];
 
-  objects.forEach(
-    (object) => {
-      object.devices.forEach(
-        (device) => {
-          (
-            device.history ||
-            []
-          ).forEach(
-            (history) => {
-              reports.push({
-                ...history,
-                device,
-                object,
-              });
-            }
-          );
-        }
-      );
-    }
-  );
+  objects.forEach((object) => {
+    (object.devices || []).forEach((device) => {
+      (device.history || []).forEach((history, index) => {
+        reports.push({
+          ...history,
+          id: history.id || `${object.id}-${device.id}-${index}`,
+          device,
+          object,
+        });
+      });
+    });
+  });
 
   reports.sort(
-    (a, b) =>
-      new Date(b.date) -
-      new Date(a.date)
+    (a, b) => new Date(b.date) - new Date(a.date)
   );
 
   return (
-    <>
-      <h1>
-        📄 Zprávy
-      </h1>
+    <div className="pa-reports">
+      <h1>📄 Zprávy</h1>
 
-      <div
-        style={
-          cardStyle
-        }
-      >
-        <b>
-          📋 Provedené kontroly
-        </b>
-
-        {reports.length ===
-        0 ? (
-          <div
-            style={
-              mutedStyle
-            }
-          >
-            Zatím nebyla provedena
-            žádná kontrola.
+      <div className="pa-report-toolbar">
+        <div>
+          <b>📋 Provedené kontroly</b>
+          <div style={{ color: "#687386", fontSize: 13, marginTop: 5 }}>
+            Celkem záznamů: {reports.length}
           </div>
-        ) : (
-          reports.map(
-            (report) => (
-              <div
-                key={
-                  report.id
-                }
-                style={{
-                  padding:
-                    "12px 0",
-                  borderBottom:
-                    "1px solid #eee",
-                }}
-              >
-                <b>
-                  {formatDate(
-                    report.date
-                  )}
-                </b>
+        </div>
 
-                <div
-                  style={
-                    smallStyle
-                  }
-                >
-                  {
-                    getDeviceIcon(
-                      report.device
-                    )
-                  }{" "}
-                  {
-                    report.device
-                      .id
-                  }
-                  {" • "}
-                  {
-                    report.object
-                      .name
-                  }
-                </div>
-
-                <div
-                  style={{
-                    marginTop: 5,
-                    fontWeight: 700,
-                    color:
-                      report.result ===
-                      "ZÁVADA"
-                        ? "#dc2626"
-                        : "#15803d",
-                  }}
-                >
-                  {
-                    report.result
-                  }
-                </div>
-              </div>
-            )
-          )
-        )}
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="pa-report-print"
+        >
+          🖨️ Tisk / Uložit PDF
+        </button>
       </div>
-    </>
+
+      {reports.length === 0 ? (
+        <div className="pa-report-empty">
+          Zatím nebyla provedena žádná kontrola.
+          <p>
+            Po dokončení kontroly se její záznam objeví zde.
+          </p>
+        </div>
+      ) : (
+        <div className="pa-report-list">
+          {reports.map((report) => (
+            <article className="pa-report-item" key={report.id}>
+              <div className="pa-report-date">
+                {formatDate(report.date)}
+              </div>
+
+              <h3>
+                {getDeviceIcon(report.device)}{" "}
+                {report.device.id}
+              </h3>
+
+              <div>
+                <b>Objekt:</b> {report.object.name}
+              </div>
+
+              <div>
+                <b>Zařízení:</b>{" "}
+                {report.device.type || "Neuvedeno"}
+              </div>
+
+              <div className="pa-report-result">
+                Výsledek: {report.result || "Neuvedeno"}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
+
 
 /* =========================================================
    MODAL – OBJEKT
