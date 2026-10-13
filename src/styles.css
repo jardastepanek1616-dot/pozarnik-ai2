@@ -261,6 +261,157 @@
 
   /* Navigaci a QR skener záměrně neměníme */
 }
+/* === VÝRAZNĚ KOMPAKTNĚJŠÍ MOBILNÍ VERZE === */
+@media screen and (max-width: 767px) {
+
+  /* Menší okraje stránky */
+  .pozarnik-app .pozarnik-main {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  /* Menší nadpisy */
+  .pozarnik-app main h1 {
+    font-size: 21px !important;
+    line-height: 1.2 !important;
+  }
+
+  .pozarnik-app main h2 {
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+  }
+
+  .pozarnik-app main h3 {
+    font-size: 15px !important;
+  }
+
+  /* Kompaktnější texty */
+  .pozarnik-app main p,
+  .pozarnik-app main label {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Menší mezery mezi kartami */
+  .pozarnik-app .card {
+    padding: 10px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Menší mezery v mřížkách */
+  .pozarnik-app main [style*="display: grid"] {
+    gap: 6px !important;
+  }
+
+  /* Menší vnitřní odsazení běžných panelů */
+  .pozarnik-app main [style*="box-shadow"] {
+    padding: 10px !important;
+  }
+
+}
+
+/* === ZPRÁVY A TISK DO PDF === */
+
+.pozarnik-app .pa-report-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  margin: 12px 0;
+  background: #fff;
+  border: 1px solid #e2e7ef;
+  border-radius: 14px;
+}
+
+.pozarnik-app .pa-report-print {
+  background: #dc2626 !important;
+  color: #fff !important;
+  border: 0 !important;
+  padding: 10px 14px !important;
+}
+
+.pozarnik-app .pa-report-empty {
+  padding: 22px;
+  margin-top: 12px;
+  background: #fff;
+  border: 1px dashed #ccd5e2;
+  border-radius: 14px;
+  color: #687386;
+}
+
+.pozarnik-app .pa-report-list {
+  display: grid;
+  gap: 12px;
+}
+
+.pozarnik-app .pa-report-item {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e2e7ef;
+  border-radius: 14px;
+  line-height: 1.7;
+  break-inside: avoid;
+}
+
+.pozarnik-app .pa-report-date {
+  color: #687386;
+  font-size: 13px;
+}
+
+.pozarnik-app .pa-report-item h3 {
+  margin: 5px 0 10px;
+}
+
+.pozarnik-app .pa-report-result {
+  margin-top: 8px;
+  font-weight: 800;
+}
+
+@media print {
+  body,
+  html,
+  .pozarnik-app {
+    background: #fff !important;
+    color: #111827 !important;
+  }
+
+  .pozarnik-app .pozarnik-header,
+  .pozarnik-app .pozarnik-nav,
+  .pozarnik-app .pa-report-print {
+    display: none !important;
+  }
+
+  .pozarnik-app,
+  .pozarnik-app .pozarnik-main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .pozarnik-app .pa-report-toolbar,
+  .pozarnik-app .pa-report-item {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+
+  .pozarnik-app .pa-report-list {
+    display: block;
+  }
+
+  .pozarnik-app .pa-report-item {
+    margin-bottom: 12px;
+  }
+
+  .pozarnik-app button {
+    display: none !important;
+  }
+}
+
 
 
 
